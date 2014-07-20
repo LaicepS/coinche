@@ -8,51 +8,52 @@ namespace coinche
 	class CoincheDeck : public IDeck<Carte>
 	{
 		public: 
-		CoincheDeck()
-		{
-			for (int figure = As; figure < LastFigure; figure++)
+			CoincheDeck()
 			{
-				for (int couleur = Coeur; couleur < LastCouleur; couleur++)
+				for (int figure = As; figure < LastFigure; figure++)
 				{
-					m_cartes.push_back(std::make_pair(Figure(figure), Couleur(couleur)));
+					for (int couleur = Coeur; couleur < LastCouleur; couleur++)
+					{
+						m_cartes.push_back(std::make_pair(Figure(figure), Couleur(couleur)));
+					}
+				}
+				shuffle();
+				for (Carte carte : m_cartes)
+				{
+					std::cout << std::get<FIGURE>(carte) << " " << std::get<COULEUR>(carte) << std::endl;
 				}
 			}
-			shuffle();
-			for (Carte carte : m_cartes)
+
+			void shuffle() 
 			{
-				std::cout << std::get<FIGURE>(carte) << " " << std::get<COULEUR>(carte) << std::endl;
 			}
-		}
-	
-		void shuffle() 
-		{
-		}
 
-		void cut() 
-		{
-		}
+			void cut() 
+			{
+			}
 
-		Carte draw() 
-		{
-			if (m_cartes.empty())
-				throw std::runtime_error("Pioche une carte quand le deck est vide.");
+			Carte draw() 
+			{
+				if (m_cartes.empty())
+					throw std::runtime_error("Pioche une carte quand le deck est vide.");
 
-			auto res = m_cartes.back();
-			m_cartes.pop_back(); 
-			return res;
-		}
+				auto res = m_cartes.back();
+				m_cartes.pop_back(); 
+				return res;
+			}
 
-		size_t size() 
-		{
-			return m_cartes.size();
-		}
+			size_t size() 
+			{
+				return m_cartes.size();
+			}
 		private:
-		std::vector<Carte> m_cartes;
+			std::vector<Carte> m_cartes;
 	};
-
-	IDeck<Carte> * NewDeckCoinche()
-	{
-		return new CoincheDeck();
-	}
-
 }
+
+IDeck<coinche::Carte> * NewDeckCoinche()
+{
+	return new coinche::CoincheDeck();
+}
+
+

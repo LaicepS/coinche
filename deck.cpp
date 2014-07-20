@@ -22,7 +22,7 @@ namespace coinche
 				assert(m_cartes.size() == 32);
 				for (Carte carte : m_cartes)
 				{
-					std::cout << std::get<FIGURE>(carte) << " " << std::get<COULEUR>(carte) << std::endl;
+					std::cout << toString(std::get<FIGURE>(carte)) << " " << toString(std::get<COULEUR>(carte)) << std::endl;
 				}
 			}
 

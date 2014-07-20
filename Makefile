@@ -1,21 +1,24 @@
 CC        = g++
-
+CPPFLAGS  = -std=c++0x -W -Wall -Werror
 PROG      = coinche
 
-CPPFLAGS  = -std=c++0x
+SRCDIR=src
+OBJDIR=obj
+INCDIR=inc
+
+SRC=$(wildcard $(SRCDIR)/*.cpp)
+OBJ=$(SRC:.cpp=.o)
 
 all: $(PROG)
 
+#phony : always evaluated (even if the dependencies are up to date)
+.PHONY: clean
 
-cards.o: cards.cpp
-	$(CC) $(CPPFLAGS) -o cards.o -c cards.cpp
-
-deck.o: deck.cpp cards.o
-	$(CC) $(CPPFLAGS) -o deck.o -c deck.cpp cards.o
-
-main.o: main.cpp deck.o
-	$(CC) $(CPPFLAGS) -o main.o -c main.cpp deck.o
+%.o: %.cpp
+	$(CC) $(CPPFLAGS) -o $@ -c $< 
 	
-$(PROG):  main.o 
-	$(CC) $(CPPFLAGS) -o coinche main.o deck.o cards.o
+$(PROG):  $(OBJ)
+	$(CC) $(CPPFLAGS) -o $@ $^ 
 
+clean:
+	rm $(SRCDIR)/*.o

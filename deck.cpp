@@ -1,6 +1,7 @@
 #include "deck.h"
 #include <vector>
 #include <stdexcept>
+#include <iostream>
 
 namespace coinche
 {
@@ -9,6 +10,18 @@ namespace coinche
 		public: 
 		CoincheDeck()
 		{
+			for (int figure = As; figure < LastFigure; figure++)
+			{
+				for (int couleur = Coeur; couleur < LastCouleur; couleur++)
+				{
+					m_cartes.push_back(std::make_pair(Figure(figure), Couleur(couleur)));
+				}
+			}
+			shuffle();
+			for (Carte carte : m_cartes)
+			{
+				std::cout << std::get<FIGURE>(carte) << " " << std::get<COULEUR>(carte) << std::endl;
+			}
 		}
 	
 		void shuffle() 
@@ -19,7 +32,7 @@ namespace coinche
 		{
 		}
 
-		Carte pioche() 
+		Carte draw() 
 		{
 			if (m_cartes.empty())
 				throw std::runtime_error("Pioche une carte quand le deck est vide.");

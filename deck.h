@@ -1,4 +1,5 @@
 #include "cards.h"
+#include <cstddef> // size_t
 
 template<class Card>
 struct IDeck
@@ -6,6 +7,7 @@ struct IDeck
 	virtual void shuffle() = 0;
 	virtual void cut() = 0;
 	virtual Card pioche() = 0;
+	virtual size_t size() = 0;
 };
 
-IDeck<coinche::Carte> * NewDeck();
+IDeck<coinche::Carte> * NewDeckCoinche();

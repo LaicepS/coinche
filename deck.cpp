@@ -11,9 +11,9 @@ namespace coinche
 		public: 
 			CoincheDeck()
 			{
-				for (int figure = As; figure < LastFigure; figure++)
+				for (int couleur = Coeur; couleur < LastCouleur; couleur++)
 				{
-					for (int couleur = Coeur; couleur < LastCouleur; couleur++)
+					for (int figure = As; figure < LastFigure; figure++)
 					{
 						m_cartes.push_back(std::make_pair(Figure(figure), Couleur(couleur)));
 					}

@@ -2,6 +2,7 @@
 #include <vector>
 #include <stdexcept>
 #include <iostream>
+#include <assert.h>
 
 namespace coinche
 {
@@ -18,6 +19,7 @@ namespace coinche
 					}
 				}
 				shuffle();
+				assert(m_cartes.size() == 32);
 				for (Carte carte : m_cartes)
 				{
 					std::cout << std::get<FIGURE>(carte) << " " << std::get<COULEUR>(carte) << std::endl;

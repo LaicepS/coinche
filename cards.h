@@ -1,4 +1,5 @@
 #include <utility>
+#include <string>
 
 namespace coinche
 {
@@ -31,4 +32,7 @@ namespace coinche
 	};
 
 	typedef std::pair<Figure, Couleur> Carte;
+
+	std::string toString(Figure);
+	std::string toString(Couleur);
 }

@@ -1,23 +1,26 @@
 #include <utility>
 
-enum Figure
+namespace coinche
 {
-	As
-		, Sept
-		, Huit 
-		, Neuf
-		, Dix
-		, Valet
-		, Dame
-		, Roi
-};
+	enum Figure
+	{
+		As
+			, Sept
+			, Huit 
+			, Neuf
+			, Dix
+			, Valet
+			, Dame
+			, Roi
+	};
 
-enum Couleur
-{
-	Coeur
-		, Pique
-		, Carreaux
-		, Trefle
-};
+	enum Couleur
+	{
+		Coeur
+			, Pique
+			, Carreaux
+			, Trefle
+	};
 
-typedef std::pair<Figure, Couleur> Carte;
+	typedef std::pair<Figure, Couleur> Carte;
+}

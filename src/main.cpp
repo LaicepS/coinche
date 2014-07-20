@@ -1,4 +1,4 @@
-#include "deck.h"
+#include "../inc/deck.h"
 #include <memory>
 
 int main()

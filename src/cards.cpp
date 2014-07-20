@@ -1,4 +1,4 @@
-#include "cards.h"
+#include "../inc/cards.h"
 #include <stdexcept>
 
 namespace coinche

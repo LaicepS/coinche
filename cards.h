@@ -4,7 +4,7 @@ namespace coinche
 {
 	enum Figure
 	{
-		As
+		As 
 			, Sept
 			, Huit 
 			, Neuf
@@ -12,6 +12,7 @@ namespace coinche
 			, Valet
 			, Dame
 			, Roi
+			, LastFigure
 	};
 
 	enum Couleur
@@ -20,6 +21,13 @@ namespace coinche
 			, Pique
 			, Carreaux
 			, Trefle
+			, LastCouleur
+	};
+
+	enum
+	{
+		FIGURE = 0
+			, COULEUR = 1
 	};
 
 	typedef std::pair<Figure, Couleur> Carte;

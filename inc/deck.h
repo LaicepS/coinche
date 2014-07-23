@@ -8,6 +8,8 @@ struct IDeck
 	virtual void cut() = 0;
 	virtual Card draw() = 0;
 	virtual size_t size() = 0;
+
+	virtual ~IDeck() {}
 };
 
 IDeck<coinche::Carte> * NewDeckCoinche();

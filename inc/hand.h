@@ -4,8 +4,8 @@
 template<class Card>
 struct IHand
 {
-	virtual void add(Card card) = 0;
-	virtual Card play() = 0; 
+	virtual void add(Card const & card) = 0;
+	virtual void play(Card const & card) = 0; 
 	virtual size_t size() const = 0;
 
 	virtual ~IHand(){}

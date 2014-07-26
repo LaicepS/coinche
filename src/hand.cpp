@@ -1,5 +1,6 @@
 #include "../inc/hand.h"
 #include <vector>
+#include <stdexcept>
 
 namespace coinche
 {
@@ -8,14 +9,15 @@ namespace coinche
 		public:
 			Hand() {}
 
-			void add(Carte card)
+			void add(Carte const & card)
 			{
 				m_cards.push_back(card);
 			}
 
-			Carte play() 
+			void play(Carte const &) 
 			{
-				return m_cards.front();
+				if (m_cards.size() <= 0)
+					throw std::runtime_error("Can not play a card on an empty hand");
 			}
 
 			size_t size() const

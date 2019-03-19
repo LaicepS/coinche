@@ -17,7 +17,7 @@ namespace coinche
 				{
 					for (int figure = As; figure < LastFigure; figure++)
 					{
-						m_cartes.push_back(std::make_pair(Figure(figure), Couleur(couleur)));
+						m_cartes.push_back({Figure(figure), Couleur(couleur)});
 					}
 				}
 				assert(m_cartes.size() == LastFigure*LastCouleur);

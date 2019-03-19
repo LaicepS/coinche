@@ -31,7 +31,11 @@ namespace coinche
 			, COULEUR = 1
 	};
 
-	typedef std::pair<Figure, Couleur> Carte;
+	struct Carte
+	{
+	  Figure figure;
+	  Couleur color;
+	};
 
 	std::string toString(Figure);
 	std::string toString(Couleur);

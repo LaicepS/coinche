@@ -3,6 +3,7 @@
 
 int main()
 {
-	std::unique_ptr<IDeck<coinche::Carte>> deck(NewDeckCoinche());
-	return 0;
+  auto deck = NewDeckCoinche();
+  (void)deck;
+  return 0;
 }

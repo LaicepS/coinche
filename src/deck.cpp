@@ -23,7 +23,6 @@ namespace coinche
 				assert(m_cartes.size() == LastFigure*LastCouleur);
 
 				shuffle();
-				cut();
 			}
 
 			void shuffle() 

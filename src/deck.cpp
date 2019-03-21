@@ -69,9 +69,9 @@ namespace coinche
       std::vector<Carte> m_cartes;
   };
 
-  Deck * NewDeckCoinche()
+  std::unique_ptr<Deck>  NewDeckCoinche()
   {
-    return new CoincheDeck();
+    return std::make_unique<CoincheDeck>();
   }
 
 

@@ -1,5 +1,6 @@
 #include "cards.h"
 #include <cstddef> // size_t
+#include <memory>
 
 namespace coinche
 {
@@ -13,5 +14,5 @@ struct Deck
 	virtual ~Deck() {}
 };
 
-Deck* NewDeckCoinche();
+std::unique_ptr<Deck> NewDeckCoinche();
  }

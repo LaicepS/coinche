@@ -1,5 +1,5 @@
 CC        = g++
-CPPFLAGS  = -std=c++0x -W -Wall -Werror
+CPPFLAGS  = -W -Wall -Werror
 PROG      = coinche
 
 SRCDIR=src

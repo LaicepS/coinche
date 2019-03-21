@@ -40,4 +40,5 @@ namespace coinche
 
 	std::string toString(Figure);
 	std::string toString(Couleur);
+	std::string toString(Carte);
 }

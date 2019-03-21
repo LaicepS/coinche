@@ -32,4 +32,8 @@ namespace coinche
 											throw std::runtime_error("Unknown couleur");
 		}
 	}
+
+	std::string toString(Carte c) {
+	  return toString(c.figure) + " de " + toString(c.color);
+	}
 }

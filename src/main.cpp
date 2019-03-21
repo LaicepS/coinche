@@ -3,7 +3,7 @@
 
 int main()
 {
-  auto deck = NewDeckCoinche();
+  auto deck = coinche::NewDeckCoinche();
   (void)deck;
   return 0;
 }

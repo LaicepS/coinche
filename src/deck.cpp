@@ -8,7 +8,7 @@
 
 namespace coinche
 {
-	class CoincheDeck : public IDeck<Carte>
+	class CoincheDeck : public Deck
 	{
 		public: 
 			CoincheDeck()
@@ -68,11 +68,11 @@ namespace coinche
 			}
 			std::vector<Carte> m_cartes;
 	};
-}
 
-IDeck<coinche::Carte> * NewDeckCoinche()
+Deck * NewDeckCoinche()
 {
-	return new coinche::CoincheDeck();
+	return new CoincheDeck();
 }
 
 
+}

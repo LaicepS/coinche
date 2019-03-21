@@ -1,3 +1,5 @@
+#pragma once
+
 #include "cards.h"
 #include <cstddef> // size_t
 #include <memory>

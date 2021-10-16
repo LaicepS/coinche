@@ -1,7 +1,6 @@
-#include <iostream>
+#include <algorithm>
 #include <stdexcept>
 #include <vector>
-#include <assert.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -31,21 +30,6 @@ namespace coinche
       }
     }
 
-    void cut()
-    {
-      srand(time(NULL));
-      size_t cutIdx = rand() % _cartes.size();
-      decltype(_cartes) lowerCut =
-        decltype(_cartes)(_cartes.begin(), _cartes.begin() + cutIdx);
-      decltype(_cartes) upperCut =
-        decltype(_cartes)(_cartes.begin() + cutIdx, _cartes.end());
-      assert(lowerCut.size() + upperCut.size() == _cartes.size());
-      _cartes.insert(_cartes.begin(), upperCut.begin(), upperCut.end());
-      _cartes.insert(_cartes.begin() + cutIdx,
-                     lowerCut.begin(),
-                     lowerCut.end());
-    }
-
     carte_t draw()
     {
       if (_cartes.empty())
@@ -68,6 +52,4 @@ namespace coinche
   {
     return std::make_unique<coinche_deck>();
   }
-
-
 }

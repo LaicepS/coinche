@@ -1,9 +1,9 @@
-#include "cards.hh"
-#include "deck.hh"
-
+#include <iostream>
 #include <memory>
 #include <vector>
-#include<iostream>
+
+#include "cards.hh"
+#include "deck.hh"
 
 using namespace std;
 using namespace coinche;

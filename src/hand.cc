@@ -8,8 +8,6 @@ namespace coinche
   class hand : public hand_t
   {
   public:
-    hand() {}
-
     void add(carte_t const& card)
     {
       m_cards.push_back(card);

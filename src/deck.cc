@@ -23,9 +23,11 @@ namespace coinche
     void shuffle()
     {
       srand(time(NULL));
-      for (int i = 0; i < 1000; i++)
+      int num_cards = m_cartes.size();
+      for (int i = 0; i < num_cards; i++)
       {
-        swap(rand() % m_cartes.size(), rand() % m_cartes.size());
+        auto target_idx = i + (rand() % (num_cards - i));
+        std::swap(m_cartes[i], m_cartes[target_idx]);
       }
     }
 
@@ -59,14 +61,7 @@ namespace coinche
       return m_cartes.size();
     }
 
-    private:
-      void swap(size_t idx1, size_t idx2)
-      {
-        auto temp = m_cartes.at(idx1);
-        m_cartes[idx1] = m_cartes.at(idx2);
-        m_cartes[idx2] = temp;
-      }
-      std::vector<carte_t> m_cartes;
+    std::vector<carte_t> m_cartes;
   };
 
   std::unique_ptr<deck_t> make_coinche_deck()

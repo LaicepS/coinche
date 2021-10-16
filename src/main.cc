@@ -8,7 +8,7 @@
 using namespace std;
 using namespace coinche;
 
-bool isBetter(carte_t c0, carte_t c1)
+bool is_better(carte_t c0, carte_t c1)
 {
   if (c0.figure > c1.figure)
     return true;
@@ -34,10 +34,11 @@ int computeScores(vector<Fold> const & folds) {
 }
 
 typedef vector<carte_t> Hand;
-struct Player
+struct player_t
 {
-  Player(Hand const & startingHand)
-    : hand(startingHand) {
+  player_t(Hand const& startingHand)
+      : hand(startingHand)
+  {
   }
 
   carte_t pickCard()
@@ -57,19 +58,19 @@ int main()
   auto deck = coinche::make_coinche_deck();
 
   auto draw_hand = [&]() {
-    std::vector<carte_t> h;
+    std::vector<carte_t> hand;
     for(int i = 0; i < 10; i++)
-      h.push_back(deck->draw());
-    return h;
+      hand.push_back(deck->draw());
+    return hand;
   };
 
-  vector<Player> players = { draw_hand(), draw_hand() };
+  vector<player_t> players = {draw_hand(), draw_hand()};
 
   for(int i = 0; i < 10; i++) {
     auto cart0 = players[0].pickCard();
     auto cart1 = players[1].pickCard();
-    auto bestPlayer = isBetter(cart0, cart1) ? 0 : 1;
-    players[bestPlayer].folds.push_back({cart0, cart1});
+    auto best_player = is_better(cart0, cart1) ? 0 : 1;
+    players[best_player].folds.push_back({cart0, cart1});
   }
 
   vector<int> scores = { computeScores(players[0].folds), computeScores(players[1].folds) };

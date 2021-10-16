@@ -15,7 +15,7 @@ namespace coinche
     {
       for (int couleur = Coeur; couleur < LastCouleur; couleur++)
         for (int figure = As; figure < LastFigure; figure++)
-          m_cartes.push_back({Figure(figure), Couleur(couleur)});
+          _cartes.push_back({Figure(figure), Couleur(couleur)});
 
       shuffle();
     }
@@ -23,45 +23,45 @@ namespace coinche
     void shuffle()
     {
       srand(time(NULL));
-      int num_cards = m_cartes.size();
+      int num_cards = _cartes.size();
       for (int i = 0; i < num_cards; i++)
       {
         auto target_idx = i + (rand() % (num_cards - i));
-        std::swap(m_cartes[i], m_cartes[target_idx]);
+        std::swap(_cartes[i], _cartes[target_idx]);
       }
     }
 
     void cut()
     {
       srand(time(NULL));
-      size_t cutIdx = rand() % m_cartes.size();
-      decltype(m_cartes) lowerCut =
-        decltype(m_cartes)(m_cartes.begin(), m_cartes.begin() + cutIdx);
-      decltype(m_cartes) upperCut =
-        decltype(m_cartes)(m_cartes.begin() + cutIdx, m_cartes.end());
-      assert(lowerCut.size() + upperCut.size() == m_cartes.size());
-      m_cartes.insert(m_cartes.begin(), upperCut.begin(), upperCut.end());
-      m_cartes.insert(m_cartes.begin() + cutIdx,
-                      lowerCut.begin(),
-                      lowerCut.end());
+      size_t cutIdx = rand() % _cartes.size();
+      decltype(_cartes) lowerCut =
+        decltype(_cartes)(_cartes.begin(), _cartes.begin() + cutIdx);
+      decltype(_cartes) upperCut =
+        decltype(_cartes)(_cartes.begin() + cutIdx, _cartes.end());
+      assert(lowerCut.size() + upperCut.size() == _cartes.size());
+      _cartes.insert(_cartes.begin(), upperCut.begin(), upperCut.end());
+      _cartes.insert(_cartes.begin() + cutIdx,
+                     lowerCut.begin(),
+                     lowerCut.end());
     }
 
     carte_t draw()
     {
-      if (m_cartes.empty())
+      if (_cartes.empty())
         throw std::runtime_error("Pioche une carte quand le deck est vide.");
 
-      auto res = m_cartes.back();
-      m_cartes.pop_back();
+      auto res = _cartes.back();
+      _cartes.pop_back();
       return res;
     }
 
     size_t size()
     {
-      return m_cartes.size();
+      return _cartes.size();
     }
 
-    std::vector<carte_t> m_cartes;
+    std::vector<carte_t> _cartes;
   };
 
   std::unique_ptr<coinche_deck_t> make_coinche_deck()

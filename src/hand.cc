@@ -1,6 +1,7 @@
-#include "../inc/hand.h"
-#include <vector>
 #include <stdexcept>
+#include <vector>
+
+#include "hand.hh"
 
 namespace coinche
 {

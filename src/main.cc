@@ -1,5 +1,5 @@
-#include "../inc/deck.h"
-#include "../inc/cards.h"
+#include "cards.hh"
+#include "deck.hh"
 
 #include <memory>
 #include <vector>

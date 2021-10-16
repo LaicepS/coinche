@@ -1,24 +1,31 @@
-CC        = g++
-CPPFLAGS  = -W -Wall -Werror
-PROG      = coinche
+SRCDIR = src
+OBJDIR = obj
 
-SRCDIR=src
-OBJDIR=obj
-INCDIR=inc
+CC = g++
+CXXFLAGS = -g -Wall -O3
 
-SRC=$(wildcard $(SRCDIR)/*.cpp)
-OBJ=$(SRC:.cpp=.o)
 
-all: $(PROG)
+STRUCTURE := $(shell find $(SRCDIR) -type d)
+
+CODEFILES := $(addsuffix /*,$(STRUCTURE))
+CODEFILES := $(wildcard $(CODEFILES))
+
+# Filter Only Specific Files
+SRCFILES := $(filter %.cc,$(CODEFILES))
+HDRFILES := $(filter %.hh,$(CODEFILES))
+OBJFILES := $(subst $(SRCDIR),$(OBJDIR),$(SRCFILES:%.cc=%.o))
+
+# Filter Out Function main for Libraries
+LIBDEPS := $(filter-out $(OBJDIR)/main.o,$(OBJFILES))
+
+$(OBJDIR)/%.o: $(addprefix $(SRCDIR)/,%.cc %.hh)
+	    $(CC) -c $< -o $@ $(CFLAGS)
+
+compile: $(OBJFILES)
+	$(CC) -o coinche $^
 
 #phony : always evaluated (even if the dependencies are up to date)
 .PHONY: clean
 
-%.o: %.cpp
-	$(CC) $(CPPFLAGS) -o $@ -c $< 
-	
-$(PROG):  $(OBJ)
-	$(CC) $(CPPFLAGS) -o $@ $^ 
-
 clean:
-	rm $(SRCDIR)/*.o
+	    -rm -r $(OBJDIR)/*

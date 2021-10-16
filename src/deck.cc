@@ -1,31 +1,32 @@
-#include "../inc/deck.h"
-#include <vector>
-#include <stdexcept>
 #include <iostream>
+#include <stdexcept>
+#include <vector>
 #include <assert.h>
-#include <time.h>
 #include <stdlib.h>
+#include <time.h>
+
+#include "deck.hh"
 
 namespace coinche
 {
   class CoincheDeck : public Deck
   {
-    public: 
-      CoincheDeck()
+  public:
+    CoincheDeck()
+    {
+      for (int couleur = Coeur; couleur < LastCouleur; couleur++)
       {
-	for (int couleur = Coeur; couleur < LastCouleur; couleur++)
-	{
-	  for (int figure = As; figure < LastFigure; figure++)
-	  {
-	    m_cartes.push_back({Figure(figure), Couleur(couleur)});
-	  }
-	}
-	assert(m_cartes.size() == LastFigure*LastCouleur);
+        for (int figure = As; figure < LastFigure; figure++)
+        {
+          m_cartes.push_back({Figure(figure), Couleur(couleur)});
+        }
+      }
+      assert(m_cartes.size() == LastFigure * LastCouleur);
 
-	shuffle();
+      shuffle();
       }
 
-      void shuffle() 
+      void shuffle()
       {
 	srand(time(NULL));
 	for (int i = 0; i < 1000; i++)
@@ -34,7 +35,7 @@ namespace coinche
 	}
       }
 
-      void cut() 
+      void cut()
       {
 	srand(time(NULL));
 	size_t cutIdx = rand() % m_cartes.size();
@@ -45,17 +46,17 @@ namespace coinche
 	m_cartes.insert(m_cartes.begin() + cutIdx, lowerCut.begin(), lowerCut.end());
       }
 
-      Carte draw() 
+      Carte draw()
       {
 	if (m_cartes.empty())
 	  throw std::runtime_error("Pioche une carte quand le deck est vide.");
 
 	auto res = m_cartes.back();
-	m_cartes.pop_back(); 
-	return res;
+        m_cartes.pop_back();
+        return res;
       }
 
-      size_t size() 
+      size_t size()
       {
 	return m_cartes.size();
       }

@@ -9,9 +9,9 @@
 
 namespace coinche
 {
-  struct coinche_deck_t : deck_t
+  struct coinche_deck : coinche_deck_t
   {
-    coinche_deck_t()
+    coinche_deck()
     {
       for (int couleur = Coeur; couleur < LastCouleur; couleur++)
         for (int figure = As; figure < LastFigure; figure++)
@@ -64,9 +64,9 @@ namespace coinche
     std::vector<carte_t> m_cartes;
   };
 
-  std::unique_ptr<deck_t> make_coinche_deck()
+  std::unique_ptr<coinche_deck_t> make_coinche_deck()
   {
-    return std::make_unique<coinche_deck_t>();
+    return std::make_unique<coinche_deck>();
   }
 
 

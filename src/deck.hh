@@ -6,15 +6,15 @@
 
 namespace coinche
 {
-  struct deck_t
+  struct coinche_deck_t
   {
     virtual void shuffle() = 0;
     virtual void cut() = 0;
     virtual carte_t draw() = 0;
     virtual size_t size() = 0;
 
-    virtual ~deck_t() = default;
+    virtual ~coinche_deck_t() = default;
   };
 
-  std::unique_ptr<deck_t> make_coinche_deck();
+  std::unique_ptr<coinche_deck_t> make_coinche_deck();
 }

@@ -53,7 +53,7 @@ struct Player
 
 int main()
 {
-  auto deck = coinche::NewDeckCoinche();
+  auto deck = coinche::make_coinche_deck();
 
   auto draw_hand = [&] () {
     std::vector<Carte> h;

@@ -9,10 +9,10 @@
 
 namespace coinche
 {
-  class CoincheDeck : public Deck
+  class coinche_deck_t : public deck_t
   {
   public:
-    CoincheDeck()
+    coinche_deck_t()
     {
       for (int couleur = Coeur; couleur < LastCouleur; couleur++)
       {
@@ -70,9 +70,9 @@ namespace coinche
       std::vector<Carte> m_cartes;
   };
 
-  std::unique_ptr<Deck>  NewDeckCoinche()
+  std::unique_ptr<deck_t> make_coinche_deck()
   {
-    return std::make_unique<CoincheDeck>();
+    return std::make_unique<coinche_deck_t>();
   }
 
 

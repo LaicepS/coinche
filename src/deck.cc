@@ -46,7 +46,7 @@ namespace coinche
 	m_cartes.insert(m_cartes.begin() + cutIdx, lowerCut.begin(), lowerCut.end());
       }
 
-      Carte draw()
+      carte_t draw()
       {
 	if (m_cartes.empty())
 	  throw std::runtime_error("Pioche une carte quand le deck est vide.");
@@ -67,7 +67,7 @@ namespace coinche
 	m_cartes[idx1] = m_cartes.at(idx2);
 	m_cartes[idx2] = temp;
       }
-      std::vector<Carte> m_cartes;
+      std::vector<carte_t> m_cartes;
   };
 
   std::unique_ptr<deck_t> make_coinche_deck()

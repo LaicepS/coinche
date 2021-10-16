@@ -8,8 +8,8 @@
 using namespace std;
 using namespace coinche;
 
-bool isBetter(Carte c0, Carte c1) {
-
+bool isBetter(carte_t c0, carte_t c1)
+{
   if (c0.figure > c1.figure)
     return true;
   else if (c0.figure < c1.figure)
@@ -18,7 +18,7 @@ bool isBetter(Carte c0, Carte c1) {
   return c0.color > c1.color;
 }
 
-typedef std::pair<Carte, Carte> Fold;
+typedef std::pair<carte_t, carte_t> Fold;
 
 int computeScores(vector<Fold> const & folds) {
   int score = 0;
@@ -33,14 +33,15 @@ int computeScores(vector<Fold> const & folds) {
   return score;
 }
 
-typedef vector<Carte> Hand;
+typedef vector<carte_t> Hand;
 struct Player
 {
   Player(Hand const & startingHand)
     : hand(startingHand) {
   }
 
-  Carte pickCard() {
+  carte_t pickCard()
+  {
     auto top = hand.back();
     hand.pop_back();
     return top;
@@ -55,8 +56,8 @@ int main()
 {
   auto deck = coinche::make_coinche_deck();
 
-  auto draw_hand = [&] () {
-    std::vector<Carte> h;
+  auto draw_hand = [&]() {
+    std::vector<carte_t> h;
     for(int i = 0; i < 10; i++)
       h.push_back(deck->draw());
     return h;

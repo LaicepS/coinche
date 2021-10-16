@@ -46,7 +46,7 @@ namespace coinche
     }
   }
 
-  std::string toString(Carte c)
+  std::string toString(carte_t c)
   {
     return toString(c.figure) + " de " + toString(c.color);
   }

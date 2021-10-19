@@ -1,8 +1,11 @@
+#include <cassert>
 #include <memory>
 #include <vector>
 
 #include "cards.hh"
 #include "deck.hh"
+#include "game.hh"
+#include "test.hh"
 
 using namespace coinche;
 
@@ -10,10 +13,9 @@ typedef std::pair<carte_t, carte_t> fold_t;
 
 typedef std::vector<carte_t> hand_t;
 
-struct player_t
+struct mock_player_t : player_t
 {
-  player_t(hand_t const& hand)
-      : _hand(hand)
+  mock_player_t()
   {
   }
 
@@ -27,23 +29,19 @@ struct player_t
   hand_t _hand;
 
   std::vector<fold_t> folds;
+  int bid_calls = 0;
 };
+
+unittest(players_can_bid)
+{
+  std::vector<mock_player_t> players(4);
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  assert(players[0].bid_calls == 1);
+}
 
 int main()
 {
-  auto deck = coinche::make_coinche_deck();
-
-  auto draw_hand = [&]() {
-    std::vector<carte_t> hand;
-    for (int i = 0; i < 8; i++)
-      hand.push_back(deck->draw());
-    return hand;
-  };
-
-  std::vector<player_t> players = {draw_hand(),
-                                   draw_hand(),
-                                   draw_hand(),
-                                   draw_hand()};
-
+  coinche::tester::instance().run_tests();
   return 0;
 }

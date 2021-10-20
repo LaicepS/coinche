@@ -2,7 +2,7 @@ SRCDIR = src
 OBJDIR = obj
 
 CC = g++
-CXXFLAGS = -g -Wall -O3
+CXXFLAGS = -g -Wall -O3 -std=c++17
 
 
 STRUCTURE := $(shell find $(SRCDIR) -type d)
@@ -19,7 +19,7 @@ OBJFILES := $(subst $(SRCDIR),$(OBJDIR),$(SRCFILES:%.cc=%.o))
 LIBDEPS := $(filter-out $(OBJDIR)/main.o,$(OBJFILES))
 
 $(OBJDIR)/%.o: $(addprefix $(SRCDIR)/,%.cc %.hh)
-	    $(CC) -c $< -o $@ $(CFLAGS)
+	    $(CC) -c $< -o $@ $(CXXFLAGS)
 
 compile: $(OBJFILES)
 	$(CC) -o coinche $^

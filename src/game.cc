@@ -23,7 +23,7 @@ namespace coinche
       {
         auto bid = _players[player_idx++ % 4]->bid();
         std::visit(overloaded{[&](pass_t const& bid) { passes_in_a_row++; },
-                              [&](raise_t const& bid) {}},
+                              [&](raise_t const& bid) { passes_in_a_row = 0; }},
                    bid);
       }
     }

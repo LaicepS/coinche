@@ -72,7 +72,7 @@ unittest(bid_resume_after_raise)
   assert(players[0].bid_calls == 2);
   assert(players[1].bid_calls == 2);
   assert(players[2].bid_calls == 2);
-  assert(players[3].bid_calls == 1);
+  assert(players[3].bid_calls == 2);
   }
 
 int main()

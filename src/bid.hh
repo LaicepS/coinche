@@ -7,5 +7,4 @@ namespace coinche {
   struct raise_t{};
 
   using bid_t = std::variant<pass_t, raise_t>;
-  ;
 }

@@ -15,12 +15,14 @@ typedef std::vector<carte_t> hand_t;
 
 struct mock_player_t : player_t
 {
-  mock_player_t() {}
+  mock_player_t(std::vector<bid_t> const& bids = std::vector<bid_t>{pass_t{}})
+      : _bids(bids)
+  {
+  }
 
   bid_t bid() override
   {
-    bid_calls++;
-    return pass_t{};
+    return _bids[bid_calls++];
   }
 
   carte_t pick_card()
@@ -34,6 +36,7 @@ struct mock_player_t : player_t
 
   std::vector<fold_t> folds;
   int bid_calls = 0;
+  std::vector<bid_t> _bids;
 };
 
 unittest(players_can_bid)
@@ -48,6 +51,29 @@ unittest(players_can_bid)
   assert(players[2].bid_calls == 1);
   assert(players[3].bid_calls == 1);
 }
+
+unittest(bid_resume_after_raise)
+{
+  std::vector<mock_player_t> players;
+  auto add_player = [&](std::vector<bid_t> const& bids) {
+    players.emplace_back(bids);
+  };
+
+  add_player({pass_t{}, pass_t{}});
+  add_player({pass_t{}, pass_t{}});
+  add_player({pass_t{}, pass_t{}});
+  add_player({raise_t{}, pass_t{}});
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+
+  coinche_game->run_turn();
+
+  assert(players[0].bid_calls == 2);
+  assert(players[1].bid_calls == 2);
+  assert(players[2].bid_calls == 2);
+  assert(players[3].bid_calls == 1);
+  }
 
 int main()
 {

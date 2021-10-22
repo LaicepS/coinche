@@ -2,7 +2,8 @@ SRCDIR = src
 OBJDIR = obj
 
 CC = g++
-CXXFLAGS = -g -Wall -O3 -std=c++17
+CXXFLAGS = -g -Wall -O3 -std=c++17 -fsanitize=address -fsanitize=undefined
+LD_FLAGS = -lasan -lubsan
 
 
 STRUCTURE := $(shell find $(SRCDIR) -type d)
@@ -22,7 +23,7 @@ $(OBJDIR)/%.o: $(addprefix $(SRCDIR)/,%.cc %.hh)
 	    $(CC) -c $< -o $@ $(CXXFLAGS)
 
 compile: $(OBJFILES)
-	$(CC) -o coinche $^
+	$(CC) -o coinche $^ $(LD_FLAGS)
 
 #phony : always evaluated (even if the dependencies are up to date)
 .PHONY: clean

@@ -106,8 +106,11 @@ unittest(players_get_notified_of_bids)
 
   coinche_game->run_turn();
 
-  assert(players[0]._other_bids.size() == 3);
-  assert(std::holds_alternative<pass_t>(players[0]._other_bids[0]));
+  for (int i = 0; i < 4; i++)
+  {
+    assert(players[i]._other_bids.size() == 3);
+    assert(std::holds_alternative<pass_t>(players[i]._other_bids[0]));
+  }
 }
 
 int main()

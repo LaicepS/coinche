@@ -34,7 +34,6 @@ struct mock_player_t : player_t
 
   hand_t _hand;
 
-  std::vector<fold_t> folds;
   int bid_calls = 0;
   std::vector<bid_t> _bids;
 };
@@ -73,7 +72,13 @@ unittest(bid_resume_after_raise)
   assert(players[1].bid_calls == 2);
   assert(players[2].bid_calls == 2);
   assert(players[3].bid_calls == 2);
-  }
+}
+
+unittest(raises_cant_be_equal)
+{
+  std::vector<mock_player_t> players(4);
+  players[0]._bids[0] = raise_t{80, Coeur};
+}
 
 int main()
 {

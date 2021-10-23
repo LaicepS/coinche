@@ -2,7 +2,7 @@ SRCDIR = src
 OBJDIR = obj
 
 CC = g++
-CXXFLAGS = -g -Wall -O3 -std=c++2a -fsanitize=address -fsanitize=undefined
+CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined
 LD_FLAGS = -lasan -lubsan
 
 

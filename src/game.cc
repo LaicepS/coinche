@@ -20,17 +20,29 @@ namespace coinche
       int passes_in_a_row = 0;
       int player_idx = 0;
       std::optional<raise_t> last_raise;
+
       while (passes_in_a_row < 4)
       {
-        auto bid =
-          _players[player_idx++ % 4]->bid(lowest_higher_raise(last_raise));
+        auto bid = _players[player_idx]->bid(lowest_higher_raise(last_raise));
+
+        notify_other_players(bid, player_idx);
+
         std::visit(overloaded{[&](pass_t const&) { passes_in_a_row++; },
                               [&](raise_t const& raise) {
                                 last_raise = raise;
                                 passes_in_a_row = 0;
                               }},
                    bid);
+
+        player_idx = (player_idx + 1) % 4;
       }
+    }
+
+    void notify_other_players(bid_t const& bid, int player_idx)
+    {
+      for (int i = 0; i < 4; i++)
+        if (i != player_idx)
+          _players[i]->on_other_bid(bid);
     }
 
     std::optional<raise_t> lowest_higher_raise(std::optional<raise_t> raise)

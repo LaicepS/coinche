@@ -1,7 +1,7 @@
 #include "bid.hh"
 
 namespace coinche {
-  raise_t all_raises[44] = {
+  raise_t all_raises[48] = {
     {80, Coeur},  {80, Pique},  {80, Carreaux},  {80, Trefle},
     {90, Coeur},  {90, Pique},  {90, Carreaux},  {90, Trefle},
     {100, Coeur}, {100, Pique}, {100, Carreaux}, {100, Trefle},
@@ -11,6 +11,7 @@ namespace coinche {
     {140, Coeur}, {140, Pique}, {140, Carreaux}, {140, Trefle},
     {150, Coeur}, {150, Pique}, {150, Carreaux}, {150, Trefle},
     {160, Coeur}, {160, Pique}, {160, Carreaux}, {160, Trefle},
+    {170, Coeur}, {170, Pique}, {170, Carreaux}, {170, Trefle},
     {170, Coeur}, {170, Pique}, {170, Carreaux}, {170, Trefle},
     {250, Coeur}, {250, Pique}, {250, Carreaux}, {250, Trefle},
   };

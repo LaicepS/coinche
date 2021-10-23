@@ -20,8 +20,9 @@ struct mock_player_t : player_t
   {
   }
 
-  bid_t bid() override
+  bid_t bid(std::optional<raise_t> min_raise) override
   {
+    _bid_arg.push_back(min_raise);
     return _bids[bid_calls++];
   }
 
@@ -36,6 +37,7 @@ struct mock_player_t : player_t
 
   int bid_calls = 0;
   std::vector<bid_t> _bids;
+  std::vector<std::optional<raise_t>> _bid_arg;
 };
 
 unittest(players_can_bid)
@@ -77,7 +79,17 @@ unittest(bid_resume_after_raise)
 unittest(raises_cant_be_equal)
 {
   std::vector<mock_player_t> players(4);
-  players[0]._bids[0] = raise_t{80, Coeur};
+  players[0]._bids[0] = R80_COEUR;
+  players[0]._bids.push_back(pass_t{});
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+
+  coinche_game->run_turn();
+
+  assert(players[0]._bid_arg[0] == std::optional<raise_t>{});
+  assert(players[0]._bid_arg[1] == R90_COEUR);
+  assert(players[1]._bid_arg[0] == R90_COEUR);
 }
 
 int main()

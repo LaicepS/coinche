@@ -7,12 +7,7 @@
 namespace coinche {
   struct pass_t{};
 
-  struct raise_t{
-    int value;
-    Couleur couleur;
-  };
-
-  enum raise_idx {
+  enum raise_t {
     R80_COEUR,
     R80_PIQUE,
     R80_CARREAUX,
@@ -62,8 +57,6 @@ namespace coinche {
     R250_CARREAUX,
     R250_TREFLE,
   };
-
-  extern raise_t all_raises[48];
 
   using bid_t = std::variant<pass_t, raise_t>;
 }

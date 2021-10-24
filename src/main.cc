@@ -15,7 +15,7 @@ typedef std::vector<carte_t> hand_t;
 
 struct mock_player_t : player_t
 {
-  mock_player_t(std::vector<bid_t> const& bids = std::vector<bid_t>{pass_t{}})
+  mock_player_t(std::vector<bid_t> const& bids = {})
       : _bids(bids)
   {
   }
@@ -23,8 +23,9 @@ struct mock_player_t : player_t
   bid_t bid(std::optional<raise_t> min_raise) override
   {
     _bid_arg.emplace_back(min_raise);
-    if (bid_calls < _bids.size())
-      return _bids[bid_calls++];
+    bid_calls++;
+    if (bid_calls <= _bids.size())
+      return _bids[bid_calls - 1];
     else
       return pass_t{};
   }
@@ -95,7 +96,7 @@ unittest(bid_resume_after_raise)
 unittest(raising_updates_minimum_raise)
 {
   std::vector<mock_player_t> players(4);
-  players[0]._bids[0] = R80_COEUR;
+  players[0]._bids.emplace_back(R80_COEUR);
   players[0]._bids.emplace_back(pass_t{});
 
   auto coinche_game =
@@ -126,7 +127,7 @@ unittest(players_get_notified_of_bids)
 unittest(no_more_bids_after_capot)
 {
   std::vector<mock_player_t> players(4);
-  players[1]._bids[0] = R250_PIQUE;
+  players[1]._bids.emplace_back(R250_PIQUE);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -140,7 +141,7 @@ unittest(no_more_bids_after_capot)
 unittest(other_players_can_coinche_a_raise)
 {
   std::vector<mock_player_t> players(4);
-  players[1]._bids[0] = R130_TREFLE;
+  players[1]._bids.emplace_back(R130_TREFLE);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -148,6 +149,7 @@ unittest(other_players_can_coinche_a_raise)
   coinche_game->run_turn();
 
   assert(players[2]._coinche_arg == R130_TREFLE);
+  assert(players[0]._coinche_arg == R130_TREFLE);
 }
 
 int main()

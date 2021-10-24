@@ -27,11 +27,13 @@ namespace coinche
 
         notify_other_players(bid, player_idx);
 
+        auto next_player_idx = next_player(player_idx);
         std::visit(overloaded{[&](pass_t const&) { passes_in_a_row++; },
                               [&](raise_t const& raise) {
                                 last_raise = raise;
                                 passes_in_a_row = 0;
-                                _players[next_player(player_idx)]->coinche(
+                                _players[next_player_idx]->coinche(raise);
+                                _players[teammate(next_player_idx)]->coinche(
                                   raise);
                               }},
                    bid);
@@ -58,6 +60,23 @@ namespace coinche
     int next_player(int player_idx)
     {
       return (player_idx + 1) % 4;
+    }
+
+    int teammate(int player_idx)
+    {
+      switch (player_idx)
+      {
+      case 0:
+        return 2;
+      case 1:
+        return 3;
+      case 2:
+        return 0;
+      case 3:
+        return 1;
+      default:
+        abort();
+      }
     }
 
     player_t* _players[4];

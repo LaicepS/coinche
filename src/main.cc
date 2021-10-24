@@ -113,6 +113,20 @@ unittest(players_get_notified_of_bids)
   }
 }
 
+unittest(no_more_bids_after_capot)
+{
+  std::vector<mock_player_t> players(4);
+  players[1]._bids[0] = R250_PIQUE;
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+
+  coinche_game->run_turn();
+  assert(players[2]._bid_arg.size() == 0);
+  assert(players[3]._bid_arg.size() == 0);
+  assert(players[0]._bid_arg.size() == 1);
+}
+
 int main()
 {
   coinche::tester::instance().run_tests();

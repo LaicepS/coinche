@@ -56,6 +56,7 @@ namespace coinche {
     R250_PIQUE,
     R250_CARREAUX,
     R250_TREFLE,
+    RMAX_BID,
   };
 
   using bid_t = std::variant<pass_t, raise_t>;

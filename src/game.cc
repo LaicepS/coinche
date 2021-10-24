@@ -21,7 +21,7 @@ namespace coinche
       int player_idx = 0;
       std::optional<raise_t> last_raise;
 
-      while (passes_in_a_row < 4)
+      while (passes_in_a_row < 4 && last_raise < R250_COEUR)
       {
         auto bid = _players[player_idx]->bid(lowest_higher_raise(last_raise));
 
@@ -48,7 +48,7 @@ namespace coinche
     std::optional<raise_t> lowest_higher_raise(std::optional<raise_t> raise)
     {
       if (!raise)
-        return std::optional<raise_t>{};
+        return {};
 
       return raise_t((*raise / 4 + 1) * 4);
     }

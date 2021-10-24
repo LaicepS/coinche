@@ -24,11 +24,21 @@ struct mock_player_t : player_t
   {
     _bid_arg.emplace_back(min_raise);
     return _bids[bid_calls++];
+    if (bid_calls < _bids.size())
+      return _bids[bid_calls++];
+    else
+      return pass_t{};
   }
 
   void on_other_bid(bid_t const& bid) override
   {
     _other_bids.emplace_back(bid);
+  }
+
+  bool coinche(raise_t const& raise) override
+  {
+    _coinche_arg = raise;
+    return false;
   }
 
   carte_t pick_card()
@@ -40,10 +50,11 @@ struct mock_player_t : player_t
 
   hand_t _hand;
 
-  int bid_calls = 0;
+  size_t bid_calls = 0;
   std::vector<bid_t> _bids;
   std::vector<std::optional<raise_t>> _bid_arg;
   std::vector<bid_t> _other_bids;
+  raise_t _coinche_arg;
 };
 
 unittest(players_can_bid)
@@ -125,6 +136,19 @@ unittest(no_more_bids_after_capot)
   assert(players[2]._bid_arg.size() == 0);
   assert(players[3]._bid_arg.size() == 0);
   assert(players[0]._bid_arg.size() == 1);
+}
+
+unittest(other_players_can_coinche_a_raise)
+{
+  std::vector<mock_player_t> players(4);
+  players[1]._bids[0] = R130_TREFLE;
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+
+  coinche_game->run_turn();
+
+  assert(players[2]._coinche_arg == R130_TREFLE);
 }
 
 int main()

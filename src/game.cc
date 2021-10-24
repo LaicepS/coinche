@@ -31,10 +31,12 @@ namespace coinche
                               [&](raise_t const& raise) {
                                 last_raise = raise;
                                 passes_in_a_row = 0;
+                                _players[next_player(player_idx)]->coinche(
+                                  raise);
                               }},
                    bid);
 
-        player_idx = (player_idx + 1) % 4;
+        player_idx = next_player(player_idx);
       }
     }
 
@@ -51,6 +53,11 @@ namespace coinche
         return {};
 
       return raise_t((*raise / 4 + 1) * 4);
+    }
+
+    int next_player(int player_idx)
+    {
+      return (player_idx + 1) % 4;
     }
 
     player_t* _players[4];

@@ -72,15 +72,8 @@ unittest(players_can_bid)
 
 unittest(bid_resume_after_raise)
 {
-  std::vector<mock_player_t> players;
-  auto add_player = [&](std::vector<bid_t> const& bids) {
-    players.emplace_back(bids);
-  };
-
-  add_player({pass_t{}, pass_t{}});
-  add_player({pass_t{}, pass_t{}});
-  add_player({pass_t{}, pass_t{}});
-  add_player({raise_t{}, pass_t{}});
+  std::vector<mock_player_t> players(4);
+  players[3]._bids.emplace_back(R80_COEUR);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

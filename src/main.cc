@@ -23,7 +23,6 @@ struct mock_player_t : player_t
   bid_t bid(std::optional<raise_t> min_raise) override
   {
     _bid_arg.emplace_back(min_raise);
-    return _bids[bid_calls++];
     if (bid_calls < _bids.size())
       return _bids[bid_calls++];
     else

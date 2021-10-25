@@ -31,25 +31,29 @@ int main() {
     auto choose_best_bandit = dice(generator) > epsilon;
     int bandit_idx = -1;
     if (choose_best_bandit) {
-      std::vector<int> best_bandits_idx;
+      std::vector<int> best_bandits_indexes;
       double best_bandit_value = -1000;
       for (int i = 0; i < bandits.size(); i++) {
         if (bandit_estimations[i].current_estimation > best_bandit_value) {
           best_bandit_value = bandit_estimations[i].current_estimation;
-          best_bandits_idx = std::vector<int>{i};
+          best_bandits_indexes = std::vector<int>{i};
         } else if (bandit_estimations[i].current_estimation ==
                    best_bandit_value)
-          best_bandits_idx.push_back(i);
+          best_bandits_indexes.push_back(i);
 
-        if (best_bandits_idx.size() == 1)
-          bandit_idx = best_bandits_idx.front();
+        if (best_bandits_indexes.size() == 1)
+          bandit_idx = best_bandits_indexes.front();
         else {
-          assert(best_bandits_idx.size() > 1);
-          std::uniform_int_distribution<int> referee(0,
-                                                     best_bandits_idx.size());
+          assert(best_bandits_indexes.size() > 1);
+          std::uniform_int_distribution<int>
+            referee(0, best_bandits_indexes.size());
+
+          bandit_idx = referee(generator);
         }
       }
     } else {
+      std::uniform_int_distribution<int> referee(0, bandits.size());
+      bandit_idx = referee(generator);
     }
   }
 

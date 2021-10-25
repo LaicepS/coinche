@@ -16,9 +16,6 @@ int main() {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
 
-  std::vector<std::normal_distribution<double>>
-    bandits(10, std::normal_distribution<double>{0, 1});
-
   std::vector<normal_distribution_t> bandits;
   std::vector<bandit_estimation_t> bandit_estimations;
   for (int i = -5; i < 5; i++) {
@@ -34,16 +31,18 @@ int main() {
       std::vector<int> best_bandits_indexes;
       double best_bandit_value = -1000;
       for (int i = 0; i < bandits.size(); i++) {
-        if (bandit_estimations[i].current_estimation > best_bandit_value) {
+        if (bandit_estimations[i].current_estimation > best_bandit_value)
+        {
           best_bandit_value = bandit_estimations[i].current_estimation;
           best_bandits_indexes = std::vector<int>{i};
-        } else if (bandit_estimations[i].current_estimation ==
-                   best_bandit_value)
+        }
+        else if (bandit_estimations[i].current_estimation == best_bandit_value)
           best_bandits_indexes.push_back(i);
 
         if (best_bandits_indexes.size() == 1)
           bandit_idx = best_bandits_indexes.front();
-        else {
+        else
+        {
           assert(best_bandits_indexes.size() > 1);
           std::uniform_int_distribution<int>
             referee(0, best_bandits_indexes.size());
@@ -63,6 +62,12 @@ int main() {
       curr_estimation.current_estimation
       + 1. / curr_estimation.selected_count
           * (reward - curr_estimation.current_estimation);
+  }
+
+  for (int i = 0; i < bandits.size(); i++)
+  {
+    std::cout << "est : " << i << " "
+              << bandit_estimations[i].current_estimation << std::endl;
   }
 
   return 0;

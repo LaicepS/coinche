@@ -16,8 +16,8 @@ int main() {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator(seed);
 
-  // std::vector<std::normal_distribution<double>> bandits(
-  //     10, std::normal_distribution<double>{0, 1});
+  std::vector<std::normal_distribution<double>>
+    bandits(10, std::normal_distribution<double>{0, 1});
 
   std::vector<normal_distribution_t> bandits;
   std::vector<bandit_estimation_t> bandit_estimations;
@@ -55,6 +55,13 @@ int main() {
       std::uniform_int_distribution<int> referee(0, bandits.size());
       bandit_idx = referee(generator);
     }
+
+    auto reward = bandits[bandit_idx](generator);
+    bandit_estimations[bandit_idx].selected_count++;
+    bandit_estimations[bandit_idx].current_estimation =
+      bandit_estimations[bandit_idx].current_estimation
+      + 1. / bandit_estimations[bandit_idx].selected_count++
+          * (reward - bandit_estimations[bandit_idx].current_estimation);
   }
 
   return 0;

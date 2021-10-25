@@ -57,11 +57,12 @@ int main() {
     }
 
     auto reward = bandits[bandit_idx](generator);
-    bandit_estimations[bandit_idx].selected_count++;
-    bandit_estimations[bandit_idx].current_estimation =
-      bandit_estimations[bandit_idx].current_estimation
-      + 1. / bandit_estimations[bandit_idx].selected_count++
-          * (reward - bandit_estimations[bandit_idx].current_estimation);
+    auto& curr_estimation = bandit_estimations[bandit_idx];
+    curr_estimation.selected_count++;
+    curr_estimation.current_estimation =
+      curr_estimation.current_estimation
+      + 1. / curr_estimation.selected_count
+          * (reward - curr_estimation.current_estimation);
   }
 
   return 0;

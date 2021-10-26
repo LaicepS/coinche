@@ -29,18 +29,17 @@ int choose_best_bandit(
     }
     else if (bandit_estimations[i].current_estimation == best_bandit_value)
       best_bandits_indexes.push_back(i);
+  }
 
-    if (best_bandits_indexes.size() == 1)
-      return best_bandits_indexes.front();
-    else
-    {
-      assert(best_bandits_indexes.size() > 1);
-      std::uniform_int_distribution<int> referee(0,
-                                                 best_bandits_indexes.size()
-                                                   - 1);
+  if (best_bandits_indexes.size() == 1)
+    return best_bandits_indexes.front();
+  else
+  {
+    assert(best_bandits_indexes.size() > 1);
+    std::uniform_int_distribution<int> referee(0,
+                                               best_bandits_indexes.size() - 1);
 
-      return best_bandits_indexes[referee(generator)];
-    }
+    return best_bandits_indexes[referee(generator)];
   }
 }
 
@@ -48,8 +47,8 @@ int choose_bandit(std::uniform_real_distribution<double>& dice,
                   size_t bandit_count,
                   std::vector<bandit_estimation_t> const& bandit_estimations)
 {
-  auto choose_best_bandit = dice(generator) > epsilon;
-  if (choose_best_bandit)
+  auto best_bandit = dice(generator) > epsilon;
+  if (best_bandit)
   {
     return choose_best_bandit(bandit_count, bandit_estimations);
   }

@@ -10,11 +10,15 @@ struct bandit_estimation_t {
 
 using normal_distribution_t = std::normal_distribution<double>;
 
+std::default_random_engine generator;
+
 double epsilon = 0.1;
+
+int choose_bandit() {}
 
 int main() {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
+  generator.seed(seed);
 
   std::vector<normal_distribution_t> bandits;
   std::vector<bandit_estimation_t> bandit_estimations;
@@ -25,36 +29,47 @@ int main() {
 
   std::uniform_real_distribution<double> dice(0., 1.);
   for (int i = 0; i < 10'000; i++) {
-    auto choose_best_bandit = dice(generator) > epsilon;
-    int bandit_idx = -1;
-    if (choose_best_bandit) {
-      std::vector<int> best_bandits_indexes;
-      double best_bandit_value = -1000;
-      for (int i = 0; i < bandits.size(); i++) {
-        if (bandit_estimations[i].current_estimation > best_bandit_value)
+    auto bandit_idx =
+      [](std::uniform_real_distribution<double>& dice,
+         size_t bandit_count,
+         std::vector<bandit_estimation_t> const& bandit_estimations) -> int {
+      auto choose_best_bandit = dice(generator) > epsilon;
+      int bandit_idx = -1;
+      if (choose_best_bandit)
+      {
+        std::vector<int> best_bandits_indexes;
+        double best_bandit_value = -1000;
+        for (int i = 0; i < bandit_count; i++)
         {
-          best_bandit_value = bandit_estimations[i].current_estimation;
-          best_bandits_indexes = std::vector<int>{i};
-        }
-        else if (bandit_estimations[i].current_estimation == best_bandit_value)
-          best_bandits_indexes.push_back(i);
+          if (bandit_estimations[i].current_estimation > best_bandit_value)
+          {
+            best_bandit_value = bandit_estimations[i].current_estimation;
+            best_bandits_indexes = std::vector<int>{i};
+          }
+          else if (bandit_estimations[i].current_estimation
+                   == best_bandit_value)
+            best_bandits_indexes.push_back(i);
 
-        if (best_bandits_indexes.size() == 1)
-          bandit_idx = best_bandits_indexes.front();
-        else
-        {
-          assert(best_bandits_indexes.size() > 1);
-          std::uniform_int_distribution<int> referee(0,
-                                                     best_bandits_indexes.size()
-                                                       - 1);
+          if (best_bandits_indexes.size() == 1)
+            bandit_idx = best_bandits_indexes.front();
+          else
+          {
+            assert(best_bandits_indexes.size() > 1);
+            std::uniform_int_distribution<int>
+              referee(0, best_bandits_indexes.size() - 1);
 
-          bandit_idx = best_bandits_indexes[referee(generator)];
+            bandit_idx = best_bandits_indexes[referee(generator)];
+          }
         }
       }
-    } else {
-      std::uniform_int_distribution<int> referee(0, bandits.size() - 1);
-      bandit_idx = referee(generator);
-    }
+      else
+      {
+        std::uniform_int_distribution<int> referee(0, bandit_count - 1);
+        bandit_idx = referee(generator);
+      }
+
+      return bandit_idx;
+    }(dice, bandits.size(), bandit_estimations);
 
     auto reward = bandits[bandit_idx](generator);
     auto& curr_estimation = bandit_estimations[bandit_idx];

@@ -14,6 +14,36 @@ std::default_random_engine generator;
 
 double epsilon = 0.1;
 
+int choose_best_bandit(
+  int bandit_count,
+  std::vector<bandit_estimation_t> const& bandit_estimations)
+{
+  std::vector<int> best_bandits_indexes;
+  double best_bandit_value = -1000;
+  for (int i = 0; i < bandit_count; i++)
+  {
+    if (bandit_estimations[i].current_estimation > best_bandit_value)
+    {
+      best_bandit_value = bandit_estimations[i].current_estimation;
+      best_bandits_indexes = std::vector<int>{i};
+    }
+    else if (bandit_estimations[i].current_estimation == best_bandit_value)
+      best_bandits_indexes.push_back(i);
+
+    if (best_bandits_indexes.size() == 1)
+      return best_bandits_indexes.front();
+    else
+    {
+      assert(best_bandits_indexes.size() > 1);
+      std::uniform_int_distribution<int> referee(0,
+                                                 best_bandits_indexes.size()
+                                                   - 1);
+
+      return best_bandits_indexes[referee(generator)];
+    }
+  }
+}
+
 int choose_bandit(std::uniform_real_distribution<double>& dice,
                   size_t bandit_count,
                   std::vector<bandit_estimation_t> const& bandit_estimations)
@@ -21,30 +51,7 @@ int choose_bandit(std::uniform_real_distribution<double>& dice,
   auto choose_best_bandit = dice(generator) > epsilon;
   if (choose_best_bandit)
   {
-    std::vector<int> best_bandits_indexes;
-    double best_bandit_value = -1000;
-    for (int i = 0; i < bandit_count; i++)
-    {
-      if (bandit_estimations[i].current_estimation > best_bandit_value)
-      {
-        best_bandit_value = bandit_estimations[i].current_estimation;
-        best_bandits_indexes = std::vector<int>{i};
-      }
-      else if (bandit_estimations[i].current_estimation == best_bandit_value)
-        best_bandits_indexes.push_back(i);
-
-      if (best_bandits_indexes.size() == 1)
-        return best_bandits_indexes.front();
-      else
-      {
-        assert(best_bandits_indexes.size() > 1);
-        std::uniform_int_distribution<int> referee(0,
-                                                   best_bandits_indexes.size()
-                                                     - 1);
-
-        return best_bandits_indexes[referee(generator)];
-      }
-    }
+    return choose_best_bandit(bandit_count, bandit_estimations);
   }
   else
   {

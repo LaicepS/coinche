@@ -4,7 +4,7 @@
 #include <random>
 
 struct bandit_estimation_t {
-  double current_estimation = 0;
+  double estimation = 0;
   int selected_count = 0;
 };
 
@@ -22,12 +22,12 @@ int choose_best_bandit(
   double best_bandit_value = -1000;
   for (int i = 0; i < bandit_count; i++)
   {
-    if (bandit_estimations[i].current_estimation > best_bandit_value)
+    if (bandit_estimations[i].estimation > best_bandit_value)
     {
-      best_bandit_value = bandit_estimations[i].current_estimation;
+      best_bandit_value = bandit_estimations[i].estimation;
       best_bandits_indexes = std::vector<int>{i};
     }
-    else if (bandit_estimations[i].current_estimation == best_bandit_value)
+    else if (bandit_estimations[i].estimation == best_bandit_value)
       best_bandits_indexes.push_back(i);
   }
 
@@ -76,17 +76,17 @@ int main() {
 
     auto reward = bandits[bandit_idx](generator);
     auto& curr_estimation = bandit_estimations[bandit_idx];
+
     curr_estimation.selected_count++;
-    curr_estimation.current_estimation =
-      curr_estimation.current_estimation
-      + 1. / curr_estimation.selected_count
-          * (reward - curr_estimation.current_estimation);
+    curr_estimation.estimation = curr_estimation.estimation
+                                 + 1. / curr_estimation.selected_count
+                                     * (reward - curr_estimation.estimation);
   }
 
   for (int i = 0; i < bandits.size(); i++)
   {
-    std::cout << "est : " << i << " "
-              << bandit_estimations[i].current_estimation << std::endl;
+    std::cout << "est : " << i << " " << bandit_estimations[i].estimation
+              << std::endl;
   }
 
   return 0;

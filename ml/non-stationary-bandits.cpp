@@ -20,7 +20,7 @@ int main() {
   std::vector<bandit_estimation_t> bandit_estimations;
   for (int i = -5; i < 5; i++) {
     bandits.emplace_back(i, 1);
-    bandit_estimations.emplace({});
+    bandit_estimations.emplace_back();
   }
 
   std::uniform_real_distribution<double> dice(0., 1.);
@@ -44,14 +44,15 @@ int main() {
         else
         {
           assert(best_bandits_indexes.size() > 1);
-          std::uniform_int_distribution<int>
-            referee(0, best_bandits_indexes.size());
+          std::uniform_int_distribution<int> referee(0,
+                                                     best_bandits_indexes.size()
+                                                       - 1);
 
-          bandit_idx = referee(generator);
+          bandit_idx = best_bandits_indexes[referee(generator)];
         }
       }
     } else {
-      std::uniform_int_distribution<int> referee(0, bandits.size());
+      std::uniform_int_distribution<int> referee(0, bandits.size() - 1);
       bandit_idx = referee(generator);
     }
 

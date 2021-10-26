@@ -75,12 +75,12 @@ int main() {
     auto bandit_idx = choose_bandit(dice, bandits.size(), bandit_models);
 
     auto reward = bandits[bandit_idx](generator);
-    auto& curr_estimation = bandit_models[bandit_idx];
+    auto& curr_model = bandit_models[bandit_idx];
 
-    curr_estimation.selected_count++;
-    curr_estimation.estimation = curr_estimation.estimation
-                                 + 1. / curr_estimation.selected_count
-                                     * (reward - curr_estimation.estimation);
+    curr_model.selected_count++;
+    curr_model.estimation =
+      curr_model.estimation
+      + 1. / curr_model.selected_count * (reward - curr_model.estimation);
   }
 
   for (int i = 0; i < bandits.size(); i++)

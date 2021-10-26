@@ -3,7 +3,8 @@
 #include <iostream>
 #include <random>
 
-struct bandit_estimation_t {
+struct bandit_model_t
+{
   double estimation = 0;
   int selected_count = 0;
 };
@@ -14,9 +15,8 @@ std::default_random_engine generator;
 
 double epsilon = 0.1;
 
-int choose_best_bandit(
-  int bandit_count,
-  std::vector<bandit_estimation_t> const& bandit_estimations)
+int choose_best_bandit(int bandit_count,
+                       std::vector<bandit_model_t> const& bandit_estimations)
 {
   std::vector<int> best_bandits_indexes;
   double best_bandit_value = -1000;
@@ -45,7 +45,7 @@ int choose_best_bandit(
 
 int choose_bandit(std::uniform_real_distribution<double>& dice,
                   size_t bandit_count,
-                  std::vector<bandit_estimation_t> const& bandit_estimations)
+                  std::vector<bandit_model_t> const& bandit_estimations)
 {
   auto best_bandit = dice(generator) > epsilon;
   if (best_bandit)
@@ -64,7 +64,7 @@ int main() {
   generator.seed(seed);
 
   std::vector<normal_distribution_t> bandits;
-  std::vector<bandit_estimation_t> bandit_estimations;
+  std::vector<bandit_model_t> bandit_estimations;
   for (int i = -5; i < 5; i++) {
     bandits.emplace_back(i, 1);
     bandit_estimations.emplace_back();

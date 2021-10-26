@@ -66,7 +66,7 @@ int main() {
   std::vector<normal_distribution_t> bandits;
   std::vector<bandit_model_t> bandit_models;
   for (int i = -5; i < 5; i++) {
-    bandits.emplace_back(i, 1);
+    bandits.emplace_back(0, 1);
     bandit_models.emplace_back();
   }
 

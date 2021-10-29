@@ -33,10 +33,13 @@ namespace coinche
                               [&](raise_t const& raise) {
                                 last_raise = raise;
                                 passes_in_a_row = 0;
+
                                 coinche =
                                   _players[next_player_idx]->coinche(raise);
+
                                 if (coinche)
                                   return;
+
                                 coinche =
                                   _players[teammate(next_player_idx)]->coinche(
                                     raise);

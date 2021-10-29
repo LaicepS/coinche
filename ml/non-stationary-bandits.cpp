@@ -71,6 +71,7 @@ int main() {
   }
 
   std::uniform_real_distribution<double> dice(0., 1.);
+  std::normal_distribution<double> random_walk(0., .01);
   for (int i = 0; i < 10'000; i++) {
     auto bandit_idx = choose_bandit(dice, bandits.size(), bandit_models);
 
@@ -81,12 +82,18 @@ int main() {
     curr_model.estimation =
       curr_model.estimation
       + 1. / curr_model.selected_count * (reward - curr_model.estimation);
+
+    for (int i = 0; i < bandits.size(); i++)
+    {
+      auto new_mean = bandits[i].mean() + random_walk(generator);
+      bandits[i] = normal_distribution_t(new_mean, 1);
+    }
   }
 
   for (int i = 0; i < bandits.size(); i++)
   {
     std::cout << "est : " << i << " " << bandit_models[i].estimation
-              << std::endl;
+              << " versus real: " << bandits[i].mean() << std::endl;
   }
 
   return 0;

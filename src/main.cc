@@ -38,7 +38,7 @@ struct mock_player_t : player_t
   bool coinche(raise_t const& raise) override
   {
     _coinche_arg = raise;
-    return false;
+    return _coinche;
   }
 
   carte_t pick_card()
@@ -55,6 +55,7 @@ struct mock_player_t : player_t
   std::vector<std::optional<raise_t>> _bid_arg;
   std::vector<bid_t> _other_bids;
   raise_t _coinche_arg;
+  bool _coinche = false;
 };
 
 unittest(players_can_bid)
@@ -143,6 +144,24 @@ unittest(other_players_can_coinche_a_raise)
 
   assert(players[2]._coinche_arg == R130_TREFLE);
   assert(players[0]._coinche_arg == R130_TREFLE);
+}
+
+unittest(coinche_stops_raises)
+{
+  std::vector<mock_player_t> players(4);
+
+  players[0]._bids.emplace_back(R80_PIQUE);
+  players[1]._coinche = true;
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
+
+  assert(players[0].bid_calls == 1);
+  assert(players[1].bid_calls == 0);
+  assert(players[2].bid_calls == 0);
+  assert(players[3].bid_calls == 0);
+  assert(players[1]._coinche_arg == R80_PIQUE);
 }
 
 int main()

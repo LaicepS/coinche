@@ -20,8 +20,9 @@ namespace coinche
       int passes_in_a_row = 0;
       int player_idx = 0;
       std::optional<raise_t> last_raise;
+      bool coinche = false;
 
-      while (passes_in_a_row < 4 && last_raise < R250_COEUR)
+      while (!coinche && passes_in_a_row < 4 && last_raise < R250_COEUR)
       {
         auto bid = _players[player_idx]->bid(lowest_higher_raise(last_raise));
 
@@ -32,9 +33,13 @@ namespace coinche
                               [&](raise_t const& raise) {
                                 last_raise = raise;
                                 passes_in_a_row = 0;
-                                _players[next_player_idx]->coinche(raise);
-                                _players[teammate(next_player_idx)]->coinche(
-                                  raise);
+                                coinche =
+                                  _players[next_player_idx]->coinche(raise);
+                                if (coinche)
+                                  return;
+                                coinche =
+                                  _players[teammate(next_player_idx)]->coinche(
+                                    raise);
                               }},
                    bid);
 

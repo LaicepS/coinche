@@ -103,11 +103,10 @@ double get_average_reward(double epsilon, unsigned int seed)
 int main() {
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
-  for (auto epsilon = .01; epsilon <= 1; epsilon += .01)
+  for (auto epsilon = 1. / 128.; epsilon <= 1; epsilon *= 2)
   {
     auto average_reward = get_average_reward(epsilon, seed);
-    std::cout << "average_reward " << average_reward
-              << ", epsilon : " << epsilon << std::endl;
+    std::cout << epsilon << ", " << average_reward << std::endl;
   }
 
   return 0;

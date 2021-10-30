@@ -16,28 +16,28 @@ typedef std::vector<carte_t> hand_t;
 struct mock_player_t : player_t
 {
   mock_player_t(std::vector<bid_t> const& bids = {})
-      : _bids(bids)
+      : bids(bids)
   {
   }
 
   bid_t bid(std::optional<raise_t> min_raise) override
   {
-    _bid_arg.emplace_back(min_raise);
+    bid_arg.emplace_back(min_raise);
     bid_calls++;
-    if (bid_calls <= _bids.size())
-      return _bids[bid_calls - 1];
+    if (bid_calls <= bids.size())
+      return bids[bid_calls - 1];
     else
       return pass_t{};
   }
 
   void on_other_bid(bid_t const& bid) override
   {
-    _other_bids.emplace_back(bid);
+    other_bids.emplace_back(bid);
   }
 
   bool coinche(raise_t const& raise) override
   {
-    _coinche_arg = raise;
+    coinche_arg = raise;
     return _coinche;
   }
 
@@ -57,10 +57,10 @@ struct mock_player_t : player_t
   hand_t _hand;
 
   size_t bid_calls = 0;
-  std::vector<bid_t> _bids;
-  std::vector<std::optional<raise_t>> _bid_arg;
-  std::vector<bid_t> _other_bids;
-  raise_t _coinche_arg;
+  std::vector<bid_t> bids;
+  std::vector<std::optional<raise_t>> bid_arg;
+  std::vector<bid_t> other_bids;
+  raise_t coinche_arg;
   bool _coinche = false;
   int _surcoinche_calls = 0;
 };
@@ -81,7 +81,7 @@ unittest(players_can_bid)
 unittest(bid_resume_after_raise)
 {
   std::vector<mock_player_t> players(4);
-  players[3]._bids.emplace_back(R80_COEUR);
+  players[3].bids.emplace_back(R80_COEUR);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -97,17 +97,17 @@ unittest(bid_resume_after_raise)
 unittest(raising_updates_minimum_raise)
 {
   std::vector<mock_player_t> players(4);
-  players[0]._bids.emplace_back(R80_COEUR);
-  players[0]._bids.emplace_back(pass_t{});
+  players[0].bids.emplace_back(R80_COEUR);
+  players[0].bids.emplace_back(pass_t{});
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
 
-  assert(players[0]._bid_arg[0] == std::optional<raise_t>{});
-  assert(players[0]._bid_arg[1] == R90_COEUR);
-  assert(players[1]._bid_arg[0] == R90_COEUR);
+  assert(players[0].bid_arg[0] == std::optional<raise_t>{});
+  assert(players[0].bid_arg[1] == R90_COEUR);
+  assert(players[1].bid_arg[0] == R90_COEUR);
 }
 
 unittest(players_get_notified_of_bids)
@@ -120,44 +120,44 @@ unittest(players_get_notified_of_bids)
 
   for (int i = 0; i < 4; i++)
   {
-    assert(players[i]._other_bids.size() == 3);
-    assert(std::holds_alternative<pass_t>(players[i]._other_bids[0]));
+    assert(players[i].other_bids.size() == 3);
+    assert(std::holds_alternative<pass_t>(players[i].other_bids[0]));
   }
 }
 
 unittest(no_more_bids_after_capot)
 {
   std::vector<mock_player_t> players(4);
-  players[1]._bids.emplace_back(R250_PIQUE);
+  players[1].bids.emplace_back(R250_PIQUE);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-  assert(players[2]._bid_arg.size() == 0);
-  assert(players[3]._bid_arg.size() == 0);
-  assert(players[0]._bid_arg.size() == 1);
+  assert(players[2].bid_arg.size() == 0);
+  assert(players[3].bid_arg.size() == 0);
+  assert(players[0].bid_arg.size() == 1);
 }
 
 unittest(other_players_can_coinche_a_raise)
 {
   std::vector<mock_player_t> players(4);
-  players[1]._bids.emplace_back(R130_TREFLE);
+  players[1].bids.emplace_back(R130_TREFLE);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
 
-  assert(players[2]._coinche_arg == R130_TREFLE);
-  assert(players[0]._coinche_arg == R130_TREFLE);
+  assert(players[2].coinche_arg == R130_TREFLE);
+  assert(players[0].coinche_arg == R130_TREFLE);
 }
 
 unittest(coinche_stops_raises)
 {
   std::vector<mock_player_t> players(4);
 
-  players[0]._bids.emplace_back(R80_PIQUE);
+  players[0].bids.emplace_back(R80_PIQUE);
   players[3]._coinche = true;
 
   auto coinche_game =
@@ -168,15 +168,15 @@ unittest(coinche_stops_raises)
   assert(players[1].bid_calls == 0);
   assert(players[2].bid_calls == 0);
   assert(players[3].bid_calls == 0);
-  assert(players[1]._coinche_arg == R80_PIQUE);
-  assert(players[1]._coinche_arg == R80_PIQUE);
+  assert(players[1].coinche_arg == R80_PIQUE);
+  assert(players[1].coinche_arg == R80_PIQUE);
 }
 
 unittest(coinche_allow_for_surcoinche)
 {
   std::vector<mock_player_t> players(4);
 
-  players[0]._bids.emplace_back(R80_PIQUE);
+  players[0].bids.emplace_back(R80_PIQUE);
   players[3]._coinche = true;
 
   auto coinche_game =

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <memory>
 
 #include "game.hh"
@@ -47,6 +48,12 @@ namespace coinche
                    bid);
 
         player_idx = next_player(player_idx);
+      }
+
+      if (coinche)
+      {
+        _players[next_player(player_idx)]->surcoinche();
+        _players[teammate(next_player(player_idx))]->surcoinche();
       }
     }
 

@@ -41,6 +41,12 @@ struct mock_player_t : player_t
     return _coinche;
   }
 
+  bool surcoinche() override
+  {
+    _surcoinche_calls++;
+    return false;
+  }
+
   carte_t pick_card()
   {
     auto top = _hand.back();
@@ -56,6 +62,7 @@ struct mock_player_t : player_t
   std::vector<bid_t> _other_bids;
   raise_t _coinche_arg;
   bool _coinche = false;
+  int _surcoinche_calls = 0;
 };
 
 unittest(players_can_bid)
@@ -163,6 +170,21 @@ unittest(coinche_stops_raises)
   assert(players[3].bid_calls == 0);
   assert(players[1]._coinche_arg == R80_PIQUE);
   assert(players[1]._coinche_arg == R80_PIQUE);
+}
+
+unittest(coinche_allow_for_surcoinche)
+{
+  std::vector<mock_player_t> players(4);
+
+  players[0]._bids.emplace_back(R80_PIQUE);
+  players[3]._coinche = true;
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
+
+  assert(players[0]._surcoinche_calls == 1);
+  assert(players[2]._surcoinche_calls == 1);
 }
 
 int main()

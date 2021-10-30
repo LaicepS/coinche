@@ -151,7 +151,7 @@ unittest(coinche_stops_raises)
   std::vector<mock_player_t> players(4);
 
   players[0]._bids.emplace_back(R80_PIQUE);
-  players[1]._coinche = true;
+  players[3]._coinche = true;
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -161,6 +161,7 @@ unittest(coinche_stops_raises)
   assert(players[1].bid_calls == 0);
   assert(players[2].bid_calls == 0);
   assert(players[3].bid_calls == 0);
+  assert(players[1]._coinche_arg == R80_PIQUE);
   assert(players[1]._coinche_arg == R80_PIQUE);
 }
 

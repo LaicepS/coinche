@@ -84,11 +84,14 @@ unittest(players_can_bid)
 {
   std::vector<NiceMock<mock_player>> players(4);
 
-  EXPECT_CALL(players[0], bid(R80_COEUR)).Times(1).WillOnce(Return(R80_COEUR));
-  EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
-  EXPECT_CALL(players[2], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
-  EXPECT_CALL(players[3], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
-  EXPECT_CALL(players[0], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[0], bid(_))
+    .Times(2)
+    .WillOnce(Return(R80_COEUR))
+    .WillOnce(Return(pass_t{}));
+
+  EXPECT_CALL(players[1], bid(_)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[2], bid(_)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[3], bid(_)).Times(1).WillOnce(Return(pass_t{}));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -98,18 +101,19 @@ unittest(players_can_bid)
 
 unittest(bid_resume_after_raise)
 {
-  std::vector<mock_player_t> players(4);
-  players[3].bids.emplace_back(R80_COEUR);
+  std::vector<NiceMock<mock_player>> players(4);
+  EXPECT_CALL(players[0], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
+  EXPECT_CALL(players[1], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
+  EXPECT_CALL(players[2], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
+  EXPECT_CALL(players[3], bid(_))
+    .Times(2)
+    .WillOnce(Return(R80_COEUR))
+    .WillOnce(Return(pass_t{}));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-
-  assert(players[0].bid_calls == 2);
-  assert(players[1].bid_calls == 2);
-  assert(players[2].bid_calls == 2);
-  assert(players[3].bid_calls == 2);
 }
 
 unittest(raising_updates_minimum_raise)

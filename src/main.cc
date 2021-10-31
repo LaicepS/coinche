@@ -21,7 +21,7 @@ using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Truly;
 
-struct mock_player : player_t
+struct mock_player_t : player_t
 {
   MOCK_METHOD(bid_t, bid, (raise_t min_raise), (override));
   MOCK_METHOD(void, on_other_bid, (bid_t const& bid), (override));
@@ -31,7 +31,7 @@ struct mock_player : player_t
 
 unittest(players_can_bid)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
 
   EXPECT_CALL(players[0], bid(_))
     .Times(2)
@@ -50,7 +50,7 @@ unittest(players_can_bid)
 
 unittest(bid_resume_after_raise)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
   EXPECT_CALL(players[0], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
   EXPECT_CALL(players[1], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
   EXPECT_CALL(players[2], bid(_)).Times(2).WillRepeatedly(Return(pass_t{}));
@@ -67,7 +67,7 @@ unittest(bid_resume_after_raise)
 
 unittest(raising_updates_minimum_raise)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
 
   EXPECT_CALL(players[0], bid(R80_COEUR)).Times(1).WillOnce(Return(R80_COEUR));
   EXPECT_CALL(players[0], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
@@ -88,7 +88,7 @@ unittest(players_get_notified_of_bids)
     return std::holds_alternative<pass_t>(bid);
   };
 
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
 
   EXPECT_CALL(players[0], on_other_bid(Truly(isPass))).Times(3);
   EXPECT_CALL(players[1], on_other_bid(Truly(isPass))).Times(3);
@@ -103,7 +103,7 @@ unittest(players_get_notified_of_bids)
 
 unittest(no_more_bids_after_capot)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
   ON_CALL(players[0], bid(_)).WillByDefault(Return(pass_t{}));
   ON_CALL(players[0], bid(_)).WillByDefault(Return(R250_PIQUE));
   EXPECT_CALL(players[2], bid(_)).Times(0);
@@ -116,8 +116,9 @@ unittest(no_more_bids_after_capot)
 }
 
 unittest(other_players_can_coinche_a_raise)
+
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
   ON_CALL(players[1], bid(_)).WillByDefault(Return(R130_TREFLE));
 
   EXPECT_CALL(players[2], coinche(R130_TREFLE))
@@ -134,7 +135,7 @@ unittest(other_players_can_coinche_a_raise)
 
 unittest(coinche_stops_raises)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
 
   ON_CALL(players[0], bid(_)).WillByDefault(Return(R80_PIQUE));
   ON_CALL(players[3], coinche(R80_PIQUE)).WillByDefault(Return(true));
@@ -151,7 +152,7 @@ unittest(coinche_stops_raises)
 
 unittest(coinche_allows_for_surcoinche)
 {
-  std::vector<NiceMock<mock_player>> players(4);
+  std::vector<NiceMock<mock_player_t>> players(4);
 
   ON_CALL(players[0], bid(_)).WillByDefault(Return(R80_PIQUE));
   ON_CALL(players[3], coinche(_)).WillByDefault(Return(true));

@@ -155,16 +155,16 @@ unittest(players_get_notified_of_bids)
 
 unittest(no_more_bids_after_capot)
 {
-  std::vector<mock_player_t> players(4);
-  players[1].bids.emplace_back(R250_PIQUE);
+  std::vector<NiceMock<mock_player>> players(4);
+  ON_CALL(players[0], bid(_)).WillByDefault(Return(pass_t{}));
+  ON_CALL(players[0], bid(_)).WillByDefault(Return(R250_PIQUE));
+  EXPECT_CALL(players[2], bid(_)).Times(0);
+  EXPECT_CALL(players[3], bid(_)).Times(0);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-  assert(players[2].bid_arg.size() == 0);
-  assert(players[3].bid_arg.size() == 0);
-  assert(players[0].bid_arg.size() == 1);
 }
 
 unittest(other_players_can_coinche_a_raise)

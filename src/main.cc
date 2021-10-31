@@ -2,6 +2,9 @@
 #include <memory>
 #include <vector>
 
+#include <gmock/gmock.h>
+#include <gtest/gtest.h>
+
 #include "cards.hh"
 #include "deck.hh"
 #include "game.hh"
@@ -65,17 +68,34 @@ struct mock_player_t : player_t
   int _surcoinche_calls = 0;
 };
 
+using ::testing::_;
+using ::testing::NiceMock;
+using ::testing::Return;
+
+struct mock_player : player_t
+{
+  MOCK_METHOD(bid_t, bid, (std::optional<raise_t> min_raise), (override));
+  MOCK_METHOD(void, on_other_bid, (bid_t const& bid), (override));
+  MOCK_METHOD(bool, coinche, (raise_t const& last_raise), (override));
+  MOCK_METHOD(bool, surcoinche, (), (override));
+};
+
 unittest(players_can_bid)
 {
-  std::vector<mock_player_t> players(4);
+  std::vector<NiceMock<mock_player>> players(4);
+  EXPECT_CALL(players[0], bid(::testing::_))
+    .Times(2)
+    .WillOnce(Return(R80_COEUR))
+    .WillOnce(Return(pass_t{}));
+
+  EXPECT_CALL(players[1], bid(_)).Times(1);
+  EXPECT_CALL(players[2], bid(_)).Times(1);
+  EXPECT_CALL(players[3], bid(_)).Times(1);
+
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-  assert(players[0].bid_calls == 1);
-  assert(players[1].bid_calls == 1);
-  assert(players[2].bid_calls == 1);
-  assert(players[3].bid_calls == 1);
 }
 
 unittest(bid_resume_after_raise)

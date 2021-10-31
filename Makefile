@@ -3,7 +3,7 @@ OBJDIR = obj
 
 CC = g++
 CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined
-LD_FLAGS = -lasan -lubsan
+LD_FLAGS = -lasan -lubsan -lpthread -lgmock -lgtest
 
 
 STRUCTURE := $(shell find $(SRCDIR) -type d)

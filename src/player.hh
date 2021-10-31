@@ -8,7 +8,7 @@
 namespace coinche {
   struct player_t {
 
-    virtual bid_t bid(std::optional<raise_t> min_raise) = 0;
+    virtual bid_t bid(raise_t min_raise) = 0;
     virtual void on_other_bid(bid_t const & bid) = 0;
     virtual bool coinche(raise_t const & last_raise) = 0;
     virtual bool surcoinche() = 0;

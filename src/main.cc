@@ -23,7 +23,7 @@ struct mock_player_t : player_t
   {
   }
 
-  bid_t bid(std::optional<raise_t> min_raise) override
+  bid_t bid(raise_t min_raise) override
   {
     bid_arg.emplace_back(min_raise);
     bid_calls++;
@@ -61,7 +61,7 @@ struct mock_player_t : player_t
 
   size_t bid_calls = 0;
   std::vector<bid_t> bids;
-  std::vector<std::optional<raise_t>> bid_arg;
+  std::vector<raise_t> bid_arg;
   std::vector<bid_t> other_bids;
   raise_t coinche_arg;
   bool _coinche = false;
@@ -74,7 +74,7 @@ using ::testing::Return;
 
 struct mock_player : player_t
 {
-  MOCK_METHOD(bid_t, bid, (std::optional<raise_t> min_raise), (override));
+  MOCK_METHOD(bid_t, bid, (raise_t min_raise), (override));
   MOCK_METHOD(void, on_other_bid, (bid_t const& bid), (override));
   MOCK_METHOD(bool, coinche, (raise_t const& last_raise), (override));
   MOCK_METHOD(bool, surcoinche, (), (override));
@@ -83,14 +83,12 @@ struct mock_player : player_t
 unittest(players_can_bid)
 {
   std::vector<NiceMock<mock_player>> players(4);
-  EXPECT_CALL(players[0], bid(::testing::_))
-    .Times(2)
-    .WillOnce(Return(R80_COEUR))
-    .WillOnce(Return(pass_t{}));
 
-  EXPECT_CALL(players[1], bid(_)).Times(1);
-  EXPECT_CALL(players[2], bid(_)).Times(1);
-  EXPECT_CALL(players[3], bid(_)).Times(1);
+  EXPECT_CALL(players[0], bid(R80_COEUR)).Times(1).WillOnce(Return(R80_COEUR));
+  EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[2], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[3], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[0], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
@@ -125,7 +123,7 @@ unittest(raising_updates_minimum_raise)
 
   coinche_game->run_turn();
 
-  assert(players[0].bid_arg[0] == std::optional<raise_t>{});
+  assert(players[0].bid_arg[0] == R80_COEUR);
   assert(players[0].bid_arg[1] == R90_COEUR);
   assert(players[1].bid_arg[0] == R90_COEUR);
 }

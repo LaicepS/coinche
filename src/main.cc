@@ -118,18 +118,19 @@ unittest(bid_resume_after_raise)
 
 unittest(raising_updates_minimum_raise)
 {
-  std::vector<mock_player_t> players(4);
-  players[0].bids.emplace_back(R80_COEUR);
-  players[0].bids.emplace_back(pass_t{});
+  std::vector<NiceMock<mock_player>> players(4);
+
+  EXPECT_CALL(players[0], bid(R80_COEUR)).Times(1).WillOnce(Return(R80_COEUR));
+  EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+
+  EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[2], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[3], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-
-  assert(players[0].bid_arg[0] == R80_COEUR);
-  assert(players[0].bid_arg[1] == R90_COEUR);
-  assert(players[1].bid_arg[0] == R90_COEUR);
 }
 
 unittest(players_get_notified_of_bids)

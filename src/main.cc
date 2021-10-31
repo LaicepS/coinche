@@ -16,58 +16,6 @@ typedef std::pair<carte_t, carte_t> fold_t;
 
 typedef std::vector<carte_t> hand_t;
 
-struct mock_player_t : player_t
-{
-  mock_player_t(std::vector<bid_t> const& bids = {})
-      : bids(bids)
-  {
-  }
-
-  bid_t bid(raise_t min_raise) override
-  {
-    bid_arg.emplace_back(min_raise);
-    bid_calls++;
-    if (bid_calls <= bids.size())
-      return bids[bid_calls - 1];
-    else
-      return pass_t{};
-  }
-
-  void on_other_bid(bid_t const& bid) override
-  {
-    other_bids.emplace_back(bid);
-  }
-
-  bool coinche(raise_t const& raise) override
-  {
-    coinche_arg = raise;
-    return _coinche;
-  }
-
-  bool surcoinche() override
-  {
-    _surcoinche_calls++;
-    return false;
-  }
-
-  carte_t pick_card()
-  {
-    auto top = _hand.back();
-    _hand.pop_back();
-    return top;
-  }
-
-  hand_t _hand;
-
-  size_t bid_calls = 0;
-  std::vector<bid_t> bids;
-  std::vector<raise_t> bid_arg;
-  std::vector<bid_t> other_bids;
-  raise_t coinche_arg;
-  bool _coinche = false;
-  int _surcoinche_calls = 0;
-};
-
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -186,21 +134,19 @@ unittest(other_players_can_coinche_a_raise)
 
 unittest(coinche_stops_raises)
 {
-  std::vector<mock_player_t> players(4);
+  std::vector<NiceMock<mock_player>> players(4);
 
-  players[0].bids.emplace_back(R80_PIQUE);
-  players[3]._coinche = true;
+  ON_CALL(players[0], bid(_)).WillByDefault(Return(R80_PIQUE));
+  ON_CALL(players[3], coinche(R80_PIQUE)).WillByDefault(Return(true));
+
+  EXPECT_CALL(players[1], bid(_)).Times(0);
+  EXPECT_CALL(players[2], bid(_)).Times(0);
+  EXPECT_CALL(players[3], bid(_)).Times(0);
+  EXPECT_CALL(players[1], coinche(R80_PIQUE)).Times(1).WillOnce(Return(false));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
   coinche_game->run_turn();
-
-  assert(players[0].bid_calls == 1);
-  assert(players[1].bid_calls == 0);
-  assert(players[2].bid_calls == 0);
-  assert(players[3].bid_calls == 0);
-  assert(players[1].coinche_arg == R80_PIQUE);
-  assert(players[1].coinche_arg == R80_PIQUE);
 }
 
 unittest(coinche_allows_for_surcoinche)

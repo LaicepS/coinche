@@ -169,16 +169,19 @@ unittest(no_more_bids_after_capot)
 
 unittest(other_players_can_coinche_a_raise)
 {
-  std::vector<mock_player_t> players(4);
-  players[1].bids.emplace_back(R130_TREFLE);
+  std::vector<NiceMock<mock_player>> players(4);
+  ON_CALL(players[1], bid(_)).WillByDefault(Return(R130_TREFLE));
+
+  EXPECT_CALL(players[2], coinche(R130_TREFLE))
+    .Times(1)
+    .WillOnce(Return(false));
+
+  EXPECT_CALL(players[0], coinche(R130_TREFLE)).Times(1).WillOnce(Return(true));
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-
-  assert(players[2].coinche_arg == R130_TREFLE);
-  assert(players[0].coinche_arg == R130_TREFLE);
 }
 
 unittest(coinche_stops_raises)

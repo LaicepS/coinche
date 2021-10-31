@@ -71,6 +71,7 @@ struct mock_player_t : player_t
 using ::testing::_;
 using ::testing::NiceMock;
 using ::testing::Return;
+using ::testing::Truly;
 
 struct mock_player : player_t
 {
@@ -121,7 +122,7 @@ unittest(raising_updates_minimum_raise)
   std::vector<NiceMock<mock_player>> players(4);
 
   EXPECT_CALL(players[0], bid(R80_COEUR)).Times(1).WillOnce(Return(R80_COEUR));
-  EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
+  EXPECT_CALL(players[0], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
 
   EXPECT_CALL(players[1], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
   EXPECT_CALL(players[2], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
@@ -135,17 +136,16 @@ unittest(raising_updates_minimum_raise)
 
 unittest(players_get_notified_of_bids)
 {
-  std::vector<mock_player_t> players(4);
+  auto isPass = [](bid_t const& bid) {
+    return std::holds_alternative<pass_t>(bid);
+  };
+
+  std::vector<NiceMock<mock_player>> players(4);
+  EXPECT_CALL(players[0], on_other_bid(Truly(isPass))).Times(3);
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 
   coinche_game->run_turn();
-
-  for (int i = 0; i < 4; i++)
-  {
-    assert(players[i].other_bids.size() == 3);
-    assert(std::holds_alternative<pass_t>(players[i].other_bids[0]));
-  }
 }
 
 unittest(no_more_bids_after_capot)

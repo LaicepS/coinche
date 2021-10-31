@@ -200,19 +200,19 @@ unittest(coinche_stops_raises)
   assert(players[1].coinche_arg == R80_PIQUE);
 }
 
-unittest(coinche_allow_for_surcoinche)
+unittest(coinche_allows_for_surcoinche)
 {
-  std::vector<mock_player_t> players(4);
+  std::vector<NiceMock<mock_player>> players(4);
 
-  players[0].bids.emplace_back(R80_PIQUE);
-  players[3]._coinche = true;
+  ON_CALL(players[0], bid(_)).WillByDefault(Return(R80_PIQUE));
+  ON_CALL(players[3], coinche(_)).WillByDefault(Return(true));
+
+  EXPECT_CALL(players[0], surcoinche()).Times(1).WillOnce(Return(false));
+  EXPECT_CALL(players[2], surcoinche()).Times(1);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
   coinche_game->run_turn();
-
-  assert(players[0]._surcoinche_calls == 1);
-  assert(players[2]._surcoinche_calls == 1);
 }
 
 int main()

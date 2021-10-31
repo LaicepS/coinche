@@ -141,7 +141,12 @@ unittest(players_get_notified_of_bids)
   };
 
   std::vector<NiceMock<mock_player>> players(4);
+
   EXPECT_CALL(players[0], on_other_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[1], on_other_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[2], on_other_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[3], on_other_bid(Truly(isPass))).Times(3);
+
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
 

@@ -39,11 +39,18 @@ namespace coinche
                                   _players[next_player_idx]->coinche(raise);
 
                                 if (coinche)
+                                {
+                                  notify_coinche(raise, next_player_idx);
                                   return;
+                                }
 
                                 coinche =
                                   _players[teammate(next_player_idx)]->coinche(
                                     raise);
+
+                                if (coinche)
+                                  notify_coinche(raise,
+                                                 teammate(next_player_idx));
                               }},
                    bid);
 
@@ -62,6 +69,13 @@ namespace coinche
       for (int i = 0; i < 4; i++)
         if (i != player_idx)
           _players[i]->on_other_bid(bid);
+    }
+
+    void notify_coinche(raise_t const& raise, int player_idx)
+    {
+      for (int i = 0; i < 4; i++)
+        if (i != player_idx)
+          _players[i]->on_coinche(raise, player_idx);
     }
 
     raise_t lowest_higher_raise(raise_t raise)

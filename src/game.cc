@@ -29,38 +29,36 @@ namespace coinche
 
         notify_other_players(bid, current_player);
 
-        auto next_player_idx = next_player(current_player);
+        auto next_player = get_next_player(current_player);
         std::visit(overloaded{[&](pass_t const&) { passes_in_a_row++; },
                               [&](raise_t const& raise) {
                                 min_raise = lowest_higher_raise(raise);
                                 passes_in_a_row = 0;
 
-                                coinche =
-                                  _players[next_player_idx]->coinche(raise);
+                                coinche = _players[next_player]->coinche(raise);
 
                                 if (coinche)
                                 {
-                                  notify_coinche(raise, next_player_idx);
+                                  notify_coinche(raise, next_player);
                                   return;
                                 }
 
                                 coinche =
-                                  _players[teammate(next_player_idx)]->coinche(
+                                  _players[teammate(next_player)]->coinche(
                                     raise);
 
                                 if (coinche)
-                                  notify_coinche(raise,
-                                                 teammate(next_player_idx));
+                                  notify_coinche(raise, teammate(next_player));
                               }},
                    bid);
 
-        current_player = next_player(current_player);
+        current_player = next_player;
       }
 
       if (coinche)
       {
-        _players[next_player(current_player)]->surcoinche();
-        _players[teammate(next_player(current_player))]->surcoinche();
+        _players[get_next_player(current_player)]->surcoinche();
+        _players[teammate(get_next_player(current_player))]->surcoinche();
       }
     }
 
@@ -83,7 +81,7 @@ namespace coinche
       return raise_t((raise / 4 + 1) * 4);
     }
 
-    int next_player(int player_idx)
+    int get_next_player(int player_idx)
     {
       return (player_idx + 1) % 4;
     }

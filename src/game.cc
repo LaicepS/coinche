@@ -19,17 +19,17 @@ namespace coinche
     void run_turn() override
     {
       int passes_in_a_row = 0;
-      int player_idx = 0;
+      int current_player = 0;
       raise_t min_raise = R80_COEUR;
       bool coinche = false;
 
       while (!coinche && passes_in_a_row < 4 && min_raise < R250_COEUR)
       {
-        auto bid = _players[player_idx]->bid(min_raise);
+        auto bid = _players[current_player]->bid(min_raise);
 
-        notify_other_players(bid, player_idx);
+        notify_other_players(bid, current_player);
 
-        auto next_player_idx = next_player(player_idx);
+        auto next_player_idx = next_player(current_player);
         std::visit(overloaded{[&](pass_t const&) { passes_in_a_row++; },
                               [&](raise_t const& raise) {
                                 min_raise = lowest_higher_raise(raise);
@@ -54,13 +54,13 @@ namespace coinche
                               }},
                    bid);
 
-        player_idx = next_player(player_idx);
+        current_player = next_player(current_player);
       }
 
       if (coinche)
       {
-        _players[next_player(player_idx)]->surcoinche();
-        _players[teammate(next_player(player_idx))]->surcoinche();
+        _players[next_player(current_player)]->surcoinche();
+        _players[teammate(next_player(current_player))]->surcoinche();
       }
     }
 

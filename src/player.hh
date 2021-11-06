@@ -14,6 +14,7 @@ namespace coinche {
 
     virtual void on_other_bid(bid_t const & bid) = 0;
     virtual void on_coinche(raise_t const &, int player_idx) = 0;
+    virtual void on_surcoinche(int player_idx) = 0;
 
     virtual ~player_t() = default;
   };

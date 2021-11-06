@@ -30,6 +30,7 @@ namespace coinche
         notify_other_players(bid, current_player);
 
         auto next_player = get_next_player(current_player);
+
         std::visit(overloaded{[&](pass_t const&) { passes_in_a_row++; },
                               [&](raise_t const& raise) {
                                 min_raise = lowest_higher_raise(raise);
@@ -57,8 +58,22 @@ namespace coinche
 
       if (coinche)
       {
-        _players[get_next_player(current_player)]->surcoinche();
-        _players[teammate(get_next_player(current_player))]->surcoinche();
+        bool surcoinche = false;
+        surcoinche = _players[get_next_player(current_player)]->surcoinche();
+        if (surcoinche)
+        {
+          notify_surcoinche(get_next_player(current_player));
+          return;
+        }
+
+        surcoinche =
+          _players[teammate(get_next_player(current_player))]->surcoinche();
+
+        if (surcoinche)
+        {
+          notify_surcoinche(teammate(get_next_player(current_player)));
+          return;
+        }
       }
     }
 
@@ -74,6 +89,13 @@ namespace coinche
       for (int i = 0; i < 4; i++)
         if (i != player_idx)
           _players[i]->on_coinche(raise, player_idx);
+    }
+
+    void notify_surcoinche(int player_idx)
+    {
+      for (int i = 0; i < 4; i++)
+        if (i != player_idx)
+          _players[i]->on_surcoinche(player_idx);
     }
 
     raise_t lowest_higher_raise(raise_t raise)

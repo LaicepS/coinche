@@ -28,6 +28,7 @@ struct mock_player_t : player_t
   MOCK_METHOD(bool, coinche, (raise_t const& last_raise), (override));
   MOCK_METHOD(bool, surcoinche, (), (override));
   MOCK_METHOD(void, on_coinche, (raise_t const&, int player_idx), (override));
+  MOCK_METHOD(void, on_surcoinche, (int player_idx), (override));
 };
 
 unittest(players_can_bid)
@@ -177,6 +178,25 @@ unittest(coinche_is_notified)
 
   for (int i = 0; i < 3; i++)
     EXPECT_CALL(players[i], on_coinche(R100_PIQUE, 3)).Times(1);
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
+}
+
+unittest(surcoinche_is_notified)
+{
+  std::vector<NiceMock<mock_player_t>> players(4);
+  ON_CALL(players[0], bid(_)).WillByDefault(Return(pass_t{}));
+  ON_CALL(players[1], bid(_)).WillByDefault(Return(R80_TREFLE));
+  ON_CALL(players[2], coinche(R80_TREFLE)).WillByDefault(Return(false));
+  ON_CALL(players[0], coinche(R80_TREFLE)).WillByDefault(Return(true));
+  ON_CALL(players[1], surcoinche()).WillByDefault(Return(false));
+  ON_CALL(players[3], surcoinche()).WillByDefault(Return(true));
+
+  EXPECT_CALL(players[0], on_surcoinche(3)).Times(1);
+  EXPECT_CALL(players[1], on_surcoinche(3)).Times(1);
+  EXPECT_CALL(players[2], on_surcoinche(3)).Times(1);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

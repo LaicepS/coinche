@@ -1,3 +1,4 @@
+#include <functional>
 #include <iostream>
 #include <memory>
 
@@ -23,7 +24,6 @@ namespace coinche
 
     void run_auctions()
     {
-      void run_auctions();
       int passes_in_a_row = 0;
       int current_player = 0;
       raise_t min_raise = R80_COEUR;
@@ -33,7 +33,9 @@ namespace coinche
       {
         auto bid = _players[current_player]->bid(min_raise);
 
-        notify_other_players(bid, current_player);
+        notify_other_players(current_player, [=, this](int player) {
+          _players[player]->on_other_bid(bid);
+        });
 
         auto next_player = get_next_player(current_player);
 
@@ -83,11 +85,13 @@ namespace coinche
       }
     }
 
-    void notify_other_players(bid_t const& bid, int player_idx)
+    using notify_fn = std::function<void(int)>;
+
+    void notify_other_players(int player_idx, notify_fn const& notify)
     {
       for (int i = 0; i < 4; i++)
         if (i != player_idx)
-          _players[i]->on_other_bid(bid);
+          notify(i);
     }
 
     void notify_coinche(raise_t const& raise, int player_idx)

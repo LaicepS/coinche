@@ -204,10 +204,14 @@ unittest(surcoinche_is_notified)
   coinche_game->run_turn();
 }
 
-unittest(first_player_plays_card)
+unittest(player_plays_card)
 {
   std::vector<NiceMock<mock_player_t>> players(4);
+
   EXPECT_CALL(players[0], play()).Times(8);
+  EXPECT_CALL(players[1], play()).Times(8);
+  EXPECT_CALL(players[2], play()).Times(8);
+  EXPECT_CALL(players[3], play()).Times(8);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

@@ -86,7 +86,8 @@ namespace coinche
     void play()
     {
       for (int i = 0; i < 8; i++)
-        _players[0]->play();
+        for (int player = 0; player < 4; player++)
+          _players[player]->play();
     }
 
     using notify_fn = std::function<void(int)>;

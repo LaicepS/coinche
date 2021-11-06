@@ -18,6 +18,12 @@ namespace coinche
 
     void run_turn() override
     {
+      run_auctions();
+    }
+
+    void run_auctions()
+    {
+      void run_auctions();
       int passes_in_a_row = 0;
       int current_player = 0;
       raise_t min_raise = R80_COEUR;

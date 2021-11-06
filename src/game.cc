@@ -34,7 +34,7 @@ namespace coinche
         auto bid = _players[current_player]->bid(min_raise);
 
         notify_other_players(current_player, [=, this](int player) {
-          _players[player]->on_other_bid(bid);
+          _players[player]->on_bid(bid);
         });
 
         auto next_player = get_next_player(current_player);

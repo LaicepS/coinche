@@ -24,7 +24,7 @@ using ::testing::Truly;
 struct mock_player_t : player_t
 {
   MOCK_METHOD(bid_t, bid, (raise_t min_raise), (override));
-  MOCK_METHOD(void, on_other_bid, (bid_t const& bid), (override));
+  MOCK_METHOD(void, on_bid, (bid_t const& bid), (override));
   MOCK_METHOD(bool, coinche, (raise_t const& last_raise), (override));
   MOCK_METHOD(bool, surcoinche, (), (override));
   MOCK_METHOD(void, on_coinche, (raise_t const&, int player_idx), (override));
@@ -95,10 +95,10 @@ unittest(players_get_notified_of_bids)
   for (int i = 0; i < 4; i++)
     ON_CALL(players[i], bid(_)).WillByDefault(Return(pass_t{}));
 
-  EXPECT_CALL(players[0], on_other_bid(Truly(isPass))).Times(3);
-  EXPECT_CALL(players[1], on_other_bid(Truly(isPass))).Times(3);
-  EXPECT_CALL(players[2], on_other_bid(Truly(isPass))).Times(3);
-  EXPECT_CALL(players[3], on_other_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[0], on_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[1], on_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[2], on_bid(Truly(isPass))).Times(3);
+  EXPECT_CALL(players[3], on_bid(Truly(isPass))).Times(3);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

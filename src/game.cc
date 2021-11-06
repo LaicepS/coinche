@@ -20,6 +20,7 @@ namespace coinche
     void run_turn() override
     {
       run_auctions();
+      play();
     }
 
     void run_auctions()
@@ -80,6 +81,12 @@ namespace coinche
         if (surcoinche)
           notify_surcoinche(teammate(get_next_player(current_player)));
       }
+    }
+
+    void play()
+    {
+      for (int i = 0; i < 8; i++)
+        _players[0]->play();
     }
 
     using notify_fn = std::function<void(int)>;

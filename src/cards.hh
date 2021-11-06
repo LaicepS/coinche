@@ -10,12 +10,12 @@ enum Couleur { Coeur, Pique, Carreaux, Trefle, LastCouleur };
 
 enum { FIGURE = 0, COULEUR = 1 };
 
-struct carte_t {
+struct card_t {
   Figure figure;
   Couleur color;
 };
 
 std::string toString(Figure);
 std::string toString(Couleur);
-std::string toString(carte_t);
+std::string toString(card_t);
 }

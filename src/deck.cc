@@ -30,7 +30,7 @@ namespace coinche
       }
     }
 
-    carte_t draw()
+    card_t draw()
     {
       if (_cartes.empty())
         throw std::runtime_error("Pioche une carte quand le deck est vide.");
@@ -45,7 +45,7 @@ namespace coinche
       return _cartes.size();
     }
 
-    std::vector<carte_t> _cartes;
+    std::vector<card_t> _cartes;
   };
 
   std::unique_ptr<coinche_deck_t> make_coinche_deck()

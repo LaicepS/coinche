@@ -12,9 +12,9 @@
 
 using namespace coinche;
 
-typedef std::pair<carte_t, carte_t> fold_t;
+typedef std::pair<card_t, card_t> fold_t;
 
-typedef std::vector<carte_t> hand_t;
+typedef std::vector<card_t> hand_t;
 
 using ::testing::_;
 using ::testing::NiceMock;
@@ -29,6 +29,7 @@ struct mock_player_t : player_t
   MOCK_METHOD(bool, surcoinche, (), (override));
   MOCK_METHOD(void, on_coinche, (raise_t const&, int player_idx), (override));
   MOCK_METHOD(void, on_surcoinche, (int player_idx), (override));
+  MOCK_METHOD(card_t, play, (), (override));
 };
 
 unittest(players_can_bid)
@@ -197,6 +198,16 @@ unittest(surcoinche_is_notified)
   EXPECT_CALL(players[0], on_surcoinche(3)).Times(1);
   EXPECT_CALL(players[1], on_surcoinche(3)).Times(1);
   EXPECT_CALL(players[2], on_surcoinche(3)).Times(1);
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
+}
+
+unittest(first_player_plays_card)
+{
+  std::vector<NiceMock<mock_player_t>> players(4);
+  EXPECT_CALL(players[0], play()).Times(8);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

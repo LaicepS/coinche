@@ -78,10 +78,7 @@ namespace coinche
           _players[teammate(get_next_player(current_player))]->surcoinche();
 
         if (surcoinche)
-        {
           notify_surcoinche(teammate(get_next_player(current_player)));
-          return;
-        }
       }
     }
 

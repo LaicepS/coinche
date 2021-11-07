@@ -30,6 +30,7 @@ struct mock_player_t : player_t
   MOCK_METHOD(void, on_coinche, (raise_t const&, int player_idx), (override));
   MOCK_METHOD(void, on_surcoinche, (int player_idx), (override));
   MOCK_METHOD(card_t, play, (), (override));
+  MOCK_METHOD(void, receive, (std::vector<card_t> const&), (override));
 };
 
 unittest(players_can_bid)
@@ -204,7 +205,7 @@ unittest(surcoinche_is_notified)
   coinche_game->run_turn();
 }
 
-unittest(player_plays_card)
+unittest(player_plays_8_cards_per_deal)
 {
   std::vector<NiceMock<mock_player_t>> players(4);
 
@@ -212,6 +213,21 @@ unittest(player_plays_card)
   EXPECT_CALL(players[1], play()).Times(8);
   EXPECT_CALL(players[2], play()).Times(8);
   EXPECT_CALL(players[3], play()).Times(8);
+
+  auto coinche_game =
+    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
+}
+
+unittest(players_are_dealt_cards)
+{
+  std::vector<NiceMock<mock_player_t>> players(4);
+
+  auto eightCards = [](std::vector<card_t> const& cards) {
+    return cards.size() == 8;
+  };
+
+  EXPECT_CALL(players[0], receive(Truly(eightCards))).Times(1);
 
   auto coinche_game =
     make_coinche_game(&players[0], &players[1], &players[2], &players[3]);

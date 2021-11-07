@@ -19,8 +19,21 @@ namespace coinche
 
     void run_turn() override
     {
+      deal_cards();
       run_auctions();
       play();
+    }
+
+    void deal_cards()
+    {
+      _players[0]->receive({{Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur},
+                            {Sept, Coeur}});
     }
 
     void run_auctions()

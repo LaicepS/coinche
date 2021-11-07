@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 
 namespace coinche
 {
@@ -14,6 +15,10 @@ struct card_t {
   Figure figure;
   Couleur color;
 };
+
+inline bool operator==(card_t const & lhs, card_t const & rhs) {
+  return std::tie(lhs.figure, lhs.color) == std::tie(rhs.figure, rhs.color);
+}
 
 std::string toString(Figure);
 std::string toString(Couleur);

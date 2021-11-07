@@ -46,8 +46,12 @@ unittest(players_can_bid)
   EXPECT_CALL(players[2], bid(_)).Times(1).WillOnce(Return(pass_t{}));
   EXPECT_CALL(players[3], bid(_)).Times(1).WillOnce(Return(pass_t{}));
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -63,8 +67,12 @@ unittest(bid_resume_after_raise)
     .WillOnce(Return(R80_COEUR))
     .WillOnce(Return(pass_t{}));
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -80,8 +88,12 @@ unittest(raising_updates_minimum_raise)
   EXPECT_CALL(players[2], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
   EXPECT_CALL(players[3], bid(R90_COEUR)).Times(1).WillOnce(Return(pass_t{}));
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -102,8 +114,12 @@ unittest(players_get_notified_of_bids)
   EXPECT_CALL(players[2], on_bid(Truly(isPass))).Times(3);
   EXPECT_CALL(players[3], on_bid(Truly(isPass))).Times(3);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -116,8 +132,12 @@ unittest(no_more_bids_after_capot)
   EXPECT_CALL(players[2], bid(_)).Times(0);
   EXPECT_CALL(players[3], bid(_)).Times(0);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -134,8 +154,12 @@ unittest(other_players_can_coinche_a_raise)
 
   EXPECT_CALL(players[0], coinche(R130_TREFLE)).Times(1).WillOnce(Return(true));
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
 
   coinche_game->run_turn();
 }
@@ -152,8 +176,13 @@ unittest(coinche_stops_raises)
   EXPECT_CALL(players[3], bid(_)).Times(0);
   EXPECT_CALL(players[1], coinche(R80_PIQUE)).Times(1).WillOnce(Return(false));
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
+
   coinche_game->run_turn();
 }
 
@@ -167,8 +196,13 @@ unittest(coinche_allows_for_surcoinche)
   EXPECT_CALL(players[0], surcoinche()).Times(1).WillOnce(Return(false));
   EXPECT_CALL(players[2], surcoinche()).Times(1);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
+
   coinche_game->run_turn();
 }
 
@@ -181,8 +215,13 @@ unittest(coinche_is_notified)
   for (int i = 0; i < 3; i++)
     EXPECT_CALL(players[i], on_coinche(R100_PIQUE, 3)).Times(1);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
+
   coinche_game->run_turn();
 }
 
@@ -200,8 +239,13 @@ unittest(surcoinche_is_notified)
   EXPECT_CALL(players[1], on_surcoinche(3)).Times(1);
   EXPECT_CALL(players[2], on_surcoinche(3)).Times(1);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
+
   coinche_game->run_turn();
 }
 
@@ -214,23 +258,50 @@ unittest(player_plays_8_cards_per_deal)
   EXPECT_CALL(players[2], play()).Times(8);
   EXPECT_CALL(players[3], play()).Times(8);
 
-  auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+  auto deck = make_coinche_deck();
+  auto coinche_game = make_coinche_game(*deck.get(),
+                                        &players[0],
+                                        &players[1],
+                                        &players[2],
+                                        &players[3]);
+
   coinche_game->run_turn();
 }
+
+struct fake_deck_t : deck_t
+{
+  MOCK_METHOD(card_t, draw, (), (override));
+};
 
 unittest(players_are_dealt_cards)
 {
   std::vector<NiceMock<mock_player_t>> players(4);
 
-  auto eightCards = [](std::vector<card_t> const& cards) {
-    return cards.size() == 8;
+  std::vector<card_t> first_hand = {
+    {Sept, Coeur},
+    {Huit, Coeur},
+    {Neuf, Coeur},
+    {Dix, Coeur},
+    {Valet, Coeur},
+    {Dame, Coeur},
+    {Roi, Coeur},
+    {As, Coeur},
+  };
+  int draw_index = 0;
+
+  fake_deck_t deck;
+  ON_CALL(deck, draw()).WillByDefault([&]() {
+    return first_hand[draw_index++];
+  });
+
+  auto expectedCards = [&](std::vector<card_t> const& cards) {
+    return cards == first_hand;
   };
 
-  EXPECT_CALL(players[0], receive(Truly(eightCards))).Times(1);
+  EXPECT_CALL(players[0], receive(Truly(expectedCards))).Times(1);
 
   auto coinche_game =
-    make_coinche_game(&players[0], &players[1], &players[2], &players[3]);
+    make_coinche_game(deck, &players[0], &players[1], &players[2], &players[3]);
   coinche_game->run_turn();
 }
 

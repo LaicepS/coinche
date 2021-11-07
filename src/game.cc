@@ -2,6 +2,7 @@
 #include <iostream>
 #include <memory>
 
+#include "deck.hh"
 #include "game.hh"
 #include "variant.hh"
 
@@ -9,7 +10,12 @@ namespace coinche
 {
   struct coinche_game : coinche_game_t
   {
-    coinche_game(player_t* p0, player_t* p1, player_t* p2, player_t* p3)
+    coinche_game(deck_t& deck,
+                 player_t* p0,
+                 player_t* p1,
+                 player_t* p2,
+                 player_t* p3)
+        : _deck(deck)
     {
       _players[0] = p0;
       _players[1] = p1;
@@ -26,14 +32,14 @@ namespace coinche
 
     void deal_cards()
     {
-      _players[0]->receive({{Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur},
-                            {Sept, Coeur}});
+      _players[0]->receive({_deck.draw(),
+                            _deck.draw(),
+                            _deck.draw(),
+                            _deck.draw(),
+                            _deck.draw(),
+                            _deck.draw(),
+                            _deck.draw(),
+                            _deck.draw()});
     }
 
     void run_auctions()
@@ -154,11 +160,15 @@ namespace coinche
     }
 
     player_t* _players[4];
+    deck_t& _deck;
   };
 
-  std::unique_ptr<coinche_game_t>
-  make_coinche_game(player_t* p0, player_t* p1, player_t* p2, player_t* p3)
+  std::unique_ptr<coinche_game_t> make_coinche_game(deck_t& deck,
+                                                    player_t* p0,
+                                                    player_t* p1,
+                                                    player_t* p2,
+                                                    player_t* p3)
   {
-    return std::make_unique<coinche_game>(p0, p1, p2, p3);
+    return std::make_unique<coinche_game>(deck, p0, p1, p2, p3);
   }
 } // namespace coinche

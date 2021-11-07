@@ -8,7 +8,6 @@ namespace coinche
 {
   struct deck_t
   {
-    virtual void shuffle() = 0;
     virtual card_t draw() = 0;
 
     virtual ~deck_t() = default;

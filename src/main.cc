@@ -30,7 +30,7 @@ struct mock_player_t : player_t
   MOCK_METHOD(void, on_coinche, (raise_t const&, int player_idx), (override));
   MOCK_METHOD(void, on_surcoinche, (int player_idx), (override));
   MOCK_METHOD(card_t, play, (), (override));
-  MOCK_METHOD(void, receive, (std::vector<card_t> const&), (override));
+  MOCK_METHOD(void, receive, ((std::array<card_t, 8>) const&), (override));
 };
 
 unittest(players_can_bid)
@@ -270,35 +270,26 @@ unittest(player_plays_8_cards_per_deal)
 
 struct fake_deck_t : deck_t
 {
-  MOCK_METHOD(card_t, draw, (), (override));
+  MOCK_METHOD((std::array<card_t, 8>), draw, (), (override));
 };
 
 unittest(players_are_dealt_cards)
 {
   std::vector<NiceMock<mock_player_t>> players(4);
 
-  std::vector<card_t> first_hand = {
-    {Sept, Coeur},
-    {Huit, Coeur},
-    {Neuf, Coeur},
-    {Dix, Coeur},
-    {Valet, Coeur},
-    {Dame, Coeur},
-    {Roi, Coeur},
-    {As, Coeur},
-  };
-  int draw_index = 0;
+  std::array<card_t, 8> first_hand{card_t{Sept, Coeur},
+                                   card_t{Huit, Coeur},
+                                   card_t{Neuf, Coeur},
+                                   card_t{Dix, Coeur},
+                                   card_t{Valet, Coeur},
+                                   card_t{Dame, Coeur},
+                                   card_t{Roi, Coeur},
+                                   card_t{As, Coeur}};
 
-  fake_deck_t deck;
-  ON_CALL(deck, draw()).WillByDefault([&]() {
-    return first_hand[draw_index++];
-  });
+  NiceMock<fake_deck_t> deck;
+  ON_CALL(deck, draw()).WillByDefault([&]() { return first_hand; });
 
-  auto expectedCards = [&](std::vector<card_t> const& cards) {
-    return cards == first_hand;
-  };
-
-  EXPECT_CALL(players[0], receive(Truly(expectedCards))).Times(1);
+  EXPECT_CALL(players[0], receive(first_hand)).Times(1);
 
   auto coinche_game =
     make_coinche_game(deck, &players[0], &players[1], &players[2], &players[3]);

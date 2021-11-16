@@ -17,7 +17,7 @@ namespace coinche {
     virtual void on_coinche(raise_t const &, int player_idx) = 0;
     virtual void on_surcoinche(int player_idx) = 0;
 
-    virtual void receive(std::vector<card_t> const & ) = 0;
+    virtual void receive(std::array<card_t, 8> const & ) = 0;
 
     virtual card_t play() = 0;
 

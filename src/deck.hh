@@ -8,7 +8,7 @@ namespace coinche
 {
   struct deck_t
   {
-    virtual card_t draw() = 0;
+    virtual std::array<card_t, 8> draw() = 0;
 
     virtual ~deck_t() = default;
   };

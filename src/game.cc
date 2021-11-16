@@ -32,14 +32,7 @@ namespace coinche
 
     void deal_cards()
     {
-      _players[0]->receive({_deck.draw(),
-                            _deck.draw(),
-                            _deck.draw(),
-                            _deck.draw(),
-                            _deck.draw(),
-                            _deck.draw(),
-                            _deck.draw(),
-                            _deck.draw()});
+      _players[0]->receive(_deck.draw());
     }
 
     void run_auctions()

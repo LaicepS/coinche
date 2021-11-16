@@ -8,12 +8,12 @@ namespace coinche
   class hand : public hand_t
   {
   public:
-    void add(carte_t const& card)
+    void add(card_t const& card)
     {
       m_cards.push_back(card);
     }
 
-    void play(carte_t const&)
+    void play(card_t const&)
     {
       if (m_cards.size() <= 0)
         throw std::runtime_error("Can not play a card on an empty hand");
@@ -25,7 +25,7 @@ namespace coinche
     }
 
   private:
-    std::vector<carte_t> m_cards;
+    std::vector<card_t> m_cards;
   };
 
   std::unique_ptr<hand_t> GetCoincheHand()

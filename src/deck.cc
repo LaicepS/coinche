@@ -30,14 +30,19 @@ namespace coinche
       }
     }
 
-    card_t draw()
+    std::array<card_t, 8> draw()
     {
-      if (_cartes.empty())
+      if (_cartes.size() < 8)
         throw std::runtime_error("Pioche une carte quand le deck est vide.");
 
-      auto res = _cartes.back();
-      _cartes.pop_back();
-      return res;
+      std::array<card_t, 8> result;
+      for (int i = 0; i < 8; i++)
+      {
+        auto card = _cartes.back();
+        _cartes.pop_back();
+        result[i] = card;
+      }
+      return result;
     }
 
     size_t size()

@@ -290,6 +290,9 @@ unittest(players_are_dealt_cards)
   ON_CALL(deck, draw()).WillByDefault([&]() { return first_hand; });
 
   EXPECT_CALL(players[0], receive(first_hand)).Times(1);
+  EXPECT_CALL(players[1], receive(_)).Times(1);
+  EXPECT_CALL(players[2], receive(_)).Times(1);
+  EXPECT_CALL(players[3], receive(_)).Times(1);
 
   auto coinche_game =
     make_coinche_game(deck, &players[0], &players[1], &players[2], &players[3]);

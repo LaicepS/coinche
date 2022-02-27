@@ -7,7 +7,7 @@ BUILDDIR := $(PROJDIR)/build
 
 TARGET = coinche
 
-VERBOSE = FALSE
+VERBOSE = TRUE
 
 DIRS = .
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(SOURCEDIR)/, $(dir)))
@@ -48,7 +48,7 @@ endif
 define generateRules
 $(1)/%.o: %.cc
 	@echo Building $$@
-	$(HIDE)$(CXX) $(CXXFLAGS) -c $$(INCLUDES) -o $$(subst /,$$(PSEP),$$@) $$(subst /,$$(PSEP),$$<) -MP -MMD
+	$(HIDE)$(CXX) $(CXXFLAGS) -c $$(INCLUDES) -o $$@ $$< -MP -MMD
 endef
 
 .PHONY: all clean directories 

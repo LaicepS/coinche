@@ -1,5 +1,5 @@
 CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined
-LD_FLAGS = -lasan -lubsan -lpthread -lgmock -lgtest
+LDFLAGS = -lasan -lubsan -lpthread -lgmock -lgtest
 
 PROJDIR := $(realpath $(CURDIR)/..)
 SOURCEDIR := $(PROJDIR)/src
@@ -58,7 +58,7 @@ all: directories $(TARGET)
 $(info [${TARGET}])
 $(TARGET): $(OBJS)
 	$(HIDE)echo Linking $@
-	$(HIDE)$(CXX)  $(OBJS) -o $(TARGET) $(LD_FLAGS)
+	$(HIDE)$(CXX)  $(OBJS) -o $(TARGET) $(LDFLAGS)
 
 # Include dependencies
 -include $(DEPS)

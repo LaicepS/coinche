@@ -7,7 +7,7 @@ BUILDDIR := $(PROJDIR)/build
 
 TARGET = coinche
 
-VERBOSE = TRUE
+VERBOSE = FALSE
 
 DIRS = .
 SOURCEDIRS = $(foreach dir, $(DIRS), $(addprefix $(SOURCEDIR)/, $(dir)))

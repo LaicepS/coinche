@@ -28,10 +28,6 @@ DEPS = $(OBJS:.o=.d)
 # Name the compiler
 CXX = g++
 
-RM = rm -rf 
-RMDIR = rm -rf 
-MKDIR = mkdir -p
-ERRIGNORE = 2>/dev/null
 SEP=/
 
 # Remove space after separator
@@ -67,10 +63,10 @@ $(TARGET): $(OBJS)
 $(foreach targetdir, $(TARGETDIRS), $(eval $(call generateRules, $(targetdir))))
 
 directories: 
-	$(HIDE)$(MKDIR) $(subst /,$(PSEP),$(TARGETDIRS)) $(ERRIGNORE)
+	$(HIDE)mkdir -p $(subst /,$(PSEP),$(TARGETDIRS)) 2> /dev/null
 
 # Remove all objects, dependencies and executable files generated during the build
 clean:
-	$(HIDE)$(RMDIR) $(subst /,$(PSEP),$(TARGETDIRS)) $(ERRIGNORE)
-	$(HIDE)$(RM) $(TARGET) $(ERRIGNORE)
+	$(HIDE)rm -rf $(subst /,$(PSEP),$(TARGETDIRS)) 2> /dev/null
+	$(HIDE)rm -rf $(TARGET) $(ERRIGNORE)
 	@echo Cleaning done ! 

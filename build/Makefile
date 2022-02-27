@@ -1,4 +1,4 @@
-CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined -MP
+CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined
 LD_FLAGS = -lasan -lubsan -lpthread -lgmock -lgtest
 
 PROJDIR := $(realpath $(CURDIR)/..)
@@ -48,7 +48,7 @@ endif
 define generateRules
 $(1)/%.o: %.cc
 	@echo Building $$@
-	$(HIDE)$(CXX) $(CXXFLAGS) -c $$(INCLUDES) -o $$(subst /,$$(PSEP),$$@) $$(subst /,$$(PSEP),$$<) -MMD
+	$(HIDE)$(CXX) $(CXXFLAGS) -c $$(INCLUDES) -o $$(subst /,$$(PSEP),$$@) $$(subst /,$$(PSEP),$$<) -MP -MMD
 endef
 
 .PHONY: all clean directories 

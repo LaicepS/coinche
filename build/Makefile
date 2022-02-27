@@ -1,3 +1,4 @@
+CXX = g++
 CXXFLAGS = -g -Wall -O0 -std=c++2a -fsanitize=address -fsanitize=undefined
 LDFLAGS = -lasan -lubsan -lpthread -lgmock -lgtest
 
@@ -24,9 +25,6 @@ SOURCES = $(foreach dir,$(SOURCEDIRS),$(wildcard $(dir)/*.cc))
 OBJS := $(subst $(SOURCEDIR),$(BUILDDIR),$(SOURCES:.cc=.o))
 
 DEPS = $(OBJS:.o=.d)
-
-# Name the compiler
-CXX = g++
 
 SEP=/
 

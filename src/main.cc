@@ -17,7 +17,6 @@ typedef std::pair<card_t, card_t> fold_t;
 typedef std::vector<card_t> hand_t;
 
 using ::testing::_;
-using ::testing::AtLeast;
 using ::testing::InSequence;
 using ::testing::NiceMock;
 using ::testing::Return;

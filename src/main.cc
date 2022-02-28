@@ -17,6 +17,8 @@ typedef std::pair<card_t, card_t> fold_t;
 typedef std::vector<card_t> hand_t;
 
 using ::testing::_;
+using ::testing::AtLeast;
+using ::testing::InSequence;
 using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::Truly;
@@ -301,6 +303,60 @@ unittest(players_are_dealt_cards)
 
 unittest(starting_player_begins)
 {
+  std::vector<NiceMock<mock_player_t>> players(4);
+
+  std::array<card_t, 8> first_hand{card_t{Sept, Coeur},
+    card_t{Huit, Coeur},
+    card_t{Neuf, Coeur},
+    card_t{Dix, Coeur},
+    card_t{Valet, Coeur},
+    card_t{Dame, Coeur},
+    card_t{Roi, Coeur},
+    card_t{As, Coeur}};
+
+  NiceMock<fake_deck_t> deck;
+  ON_CALL(deck, draw()).WillByDefault([&]() { return first_hand; });
+
+  {
+    InSequence dummy;
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+    EXPECT_CALL(players[0], play());
+    EXPECT_CALL(players[1], play());
+    EXPECT_CALL(players[2], play());
+    EXPECT_CALL(players[3], play());
+  }
+
+
+  auto coinche_game =
+    make_coinche_game(deck, &players[0], &players[1], &players[2], &players[3]);
+  coinche_game->run_turn();
 }
 
 int main()

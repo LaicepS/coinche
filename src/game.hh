@@ -8,7 +8,8 @@
 namespace coinche
 {
 
-  struct coinche_game_t {
+  struct coinche_game_t
+  {
     virtual void run_turn() = 0;
 
     virtual ~coinche_game_t() = default;

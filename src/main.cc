@@ -274,6 +274,18 @@ struct fake_deck_t : deck_t
   MOCK_METHOD((std::array<card_t, 8>), draw, (), (override));
 };
 
+struct game_fixture_t
+{
+  void test_body() const;
+};
+
+void game_fixture_t::test_body() const {}
+
+// funittest(game_fixture_t, some_test)
+// {
+// }
+//
+
 unittest(players_are_dealt_cards)
 {
   std::vector<NiceMock<mock_player_t>> players(4);

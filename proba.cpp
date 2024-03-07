@@ -28,6 +28,21 @@ struct carte_t
   hauteur_t hauteur;
 };
 
+const char* famille_string[] = {"pique", "coeur", "carreau", "trefle"};
+const char* hauteur_string[] =
+  {"sept", "huit", "neuf", "dix", "valet", "dame", "roi", "as"};
+
+void print_hand(carte_t* hand)
+{
+  for (int i = 0; i < 8; i++)
+  {
+    printf("Carte %d: %s, %s\n",
+           i + 1,
+           hauteur_string[hand[i].hauteur],
+           famille_string[hand[i].famille]);
+  }
+}
+
 int main()
 {
   carte_t deck[] = {
@@ -47,24 +62,34 @@ int main()
   int colors_count[5] =
     {}; // compte le nombre bicolores, tricolores, quadricolores...
 
-  for (int i = 0; i < 1000'000; i++)
+  int num_hands = 10'000'000;
+  for (int i = 0; i < num_hands; i++)
   {
     std::shuffle(std::begin(deck), std::end(deck), rd);
-    bool colors[4] = {};
+    bool familles[4] = {};
 
     for (int i = 0; i < 8; i++)
     {
-      colors[deck[i].famille] |= true;
+      familles[deck[i].famille] |= true;
     }
 
-    int num_colors = std::accumulate(std::begin(colors), std::end(colors), 0);
+    int num_colors =
+      std::accumulate(std::begin(familles), std::end(familles), 0);
     colors_count[num_colors]++;
   }
 
-  printf("Mono: %d\n", colors_count[1]);
-  printf("Bico: %d\n", colors_count[2]);
-  printf("Trico: %d\n", colors_count[3]);
-  printf("Quadro: %d\n", colors_count[4]);
+  printf("Mono: %d, %f\n",
+         colors_count[1],
+         colors_count[1] / static_cast<float>(num_hands));
+  printf("Bico: %d, %f\n",
+         colors_count[2],
+         colors_count[2] / static_cast<float>(num_hands));
+  printf("Trico: %d, %f\n",
+         colors_count[3],
+         colors_count[3] / static_cast<float>(num_hands));
+  printf("Quadro: %d, %f\n",
+         colors_count[4],
+         colors_count[4] / static_cast<float>(num_hands));
 
   return 0;
 }

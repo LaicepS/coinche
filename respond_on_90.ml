@@ -27,8 +27,7 @@ let deal_part_hand _ =
                 | _ -> [|[]; []; []|]
         in
         let final_hands = List.fold_left add_one_card starting_hands remaining_cards  in
-        let part_hand = (Array.get final_hands 1) in
-        part_hand
+        Array.get final_hands 1
 
 
 let count_raise should_raise count part_hand =
@@ -50,8 +49,10 @@ let any_9second part_hand =
 
 let () =
         Random.self_init ();
-        let lazy_hands = (Seq.init 1_000_000 deal_part_hand) in
+        let lazy_hands = Seq.init 1_000_000 deal_part_hand in
         let count = Seq.fold_left  (count_raise (List.exists is_9))  0 lazy_hands in
         Format.printf "Num raises on 9 only: %d@." count;
+
+        let lazy_hands = Seq.init 1_000_000 deal_part_hand in
         let count = Seq.fold_left  (count_raise any_9second)  0 lazy_hands in
-        Format.printf "Num raises on 9 second or more only: %d@." count;
+        Format.printf "Num raises on 9 second or more: %d@." count;

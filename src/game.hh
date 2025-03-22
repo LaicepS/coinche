@@ -10,6 +10,7 @@ namespace coinche
 
   struct coinche_game_t
   {
+    /* Turn = deal + bid + play.  */
     virtual void run_turn() = 0;
 
     virtual ~coinche_game_t() = default;

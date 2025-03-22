@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <vector>
 
 #include "bid.hh"
 #include "cards.hh"
@@ -10,7 +9,7 @@ namespace coinche {
   struct player_t {
 
     virtual bid_t bid(raise_t min_raise) = 0;
-    virtual bool coinche(raise_t const & last_raise) = 0;
+    virtual bool coinche(raise_t last_raise) = 0;
     virtual bool surcoinche() = 0;
 
     virtual void on_bid(bid_t const & bid) = 0;

@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <array>
 #include <stdexcept>
 #include <vector>
 #include <stdlib.h>

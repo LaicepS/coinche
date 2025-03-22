@@ -36,7 +36,7 @@ struct mock_player_t : player_t
 
 unittest(players_can_bid)
 {
-  std::vector<NiceMock<mock_player_t>> players(4);
+  std::array<NiceMock<mock_player_t>, 4> players;
 
   EXPECT_CALL(players[0], bid(_))
     .Times(2)

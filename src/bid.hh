@@ -2,8 +2,6 @@
 
 #include <variant>
 
-#include "cards.hh"
-
 namespace coinche {
   struct pass_t{};
 
